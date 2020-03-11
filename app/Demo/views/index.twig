@@ -1,0 +1,25 @@
+{% extends "layout.twig" %}
+
+{% block title "Demo de pgmvcar"%}
+
+{% block body %}
+
+<div class="jumbotron">
+
+  <div class="text-center">
+    <h1>Bienvenue dans pgmvcar</h1>
+  </div>
+
+</div>
+
+{% if params %}
+
+{% for param in params %}
+
+<pre> {{param}}  </pre>
+
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}

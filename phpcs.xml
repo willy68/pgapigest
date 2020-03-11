@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<ruleset name="Framework">
+  <description>Formattage</description>
+
+  <arg name="colors"/>
+  <arg value="p"/>
+
+  <file>src</file>
+  <file>app</file>
+
+  <exclude-pattern>app/Blog/db/*$</exclude-pattern>
+  <exclude-pattern>app/Auth/db/*$</exclude-pattern>
+  <exclude-pattern>*/views/*$</exclude-pattern>
+
+  <rule ref="PSR12">
+    <exclude/>
+  </rule>
+</ruleset>

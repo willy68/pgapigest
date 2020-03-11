@@ -1,0 +1,25 @@
+{% extends "layout.twig" %}
+
+{% block title "Admin de pgmvcar"%}
+
+{% block body %}
+
+<div class="jumbotron">
+
+  <div class="text-center">
+    <h1>Bienvenue dans l'administration de pgmvcar</h1>
+  </div>
+
+</div>
+
+{% if params %}
+
+{% for param in params %}
+
+<pre> {{param}}  </pre>
+
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}
