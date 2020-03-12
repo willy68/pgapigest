@@ -19,14 +19,20 @@ class DemoController
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Framework\Renderer\RendererInterface $renderer
+     * @param \PDO $pdo
      * @return string
      */
-    public function index(ServerRequestInterface $request, RendererInterface $renderer): string
+    public function index(
+        ServerRequestInterface $request,
+        RendererInterface $renderer,
+        \PDO $pdo
+    ): string
     {
         /** @var \User $user */
         $user = User::find_by_email(['email' => 'william.lety@gmail.com']);
         $user_array = $user->to_array();
-        $params = array_merge($request->getServerParams(), $user_array );
+        $mysql_ver = $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
+        $params = array_merge($request->getServerParams(), $user_array, [$mysql_ver]);
         return $renderer->render('@demo/index', compact('params'));
     }
 }
