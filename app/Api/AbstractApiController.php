@@ -66,7 +66,10 @@ class AbstractApiController
         if (empty($models)) {
             return new Response(404);
         }
-        $json = $this->jsonArray($models);
+        $json = $this->jsonArray(
+            $models,
+            isset($options['include']) ? ['include' => $options['include']] : []
+        );
         return new Response(200, [], $json);
     }
 
@@ -78,13 +81,15 @@ class AbstractApiController
      */
     public function get(ServerRequestInterface $request): ResponseInterface
     {
+        $options = [];
+        $options = $this->getQueryOption($request, $options);
         $id = $request->getAttribute('id', 0);
         try {
             $model = $this->model::find($id);
         } catch (\ActiveRecord\RecordNotFound $e) {
             return new Response(404);
         }
-        return new Response(200, [], $model->to_json());
+        return new Response(200, [], $model->to_json(isset($options['include']) ? ['include' => $options['include']] : []));
     }
     /**
      * Update model by id
@@ -204,7 +209,7 @@ class AbstractApiController
     protected function getQueryOption(ServerRequestInterface $request, array $options, ?array $filter = []): array
     {
         if (empty($filter)) {
-            $filter = ['limit', 'offset', 'order', 'include'];
+        $filter = ['limit', 'offset', 'order', 'include'];
         }
         $queryOptions = $request->getQueryParams();
         if (!empty($queryOptions)) {
@@ -222,16 +227,18 @@ class AbstractApiController
     }
 
     /**
+     * 
      * Transform le tableau $record
      * en un tableau d'objets json
      *
      * @param array $records
+     * @param array $include
      * @return string
      */
-    public function jsonArray(array $records): string
+    public function jsonArray(array $records, $include = []): string
     {
-        $json = join(',', array_map(function ($record) {
-            return $record->to_json();
+        $json = join(',', array_map(function ($record) use ($include) {
+            return $record->to_json($include);
         }, $records));
         return '[' . $json . ']';
     }
