@@ -204,13 +204,17 @@ class AbstractApiController
     protected function getQueryOption(ServerRequestInterface $request, array $options, ?array $filter = []): array
     {
         if (empty($filter)) {
-            $filter = ['limit', 'offset', 'order'];
+            $filter = ['limit', 'offset', 'order', 'include'];
         }
         $queryOptions = $request->getQueryParams();
         if (!empty($queryOptions)) {
             array_walk($queryOptions, function ($value, $key) use (&$options, $filter) {
                 if (in_array($key, $filter)) {
-                    $options[$key] = $value;
+                    if ($key === 'include') {
+                        $options[$key] = [$value];
+                    } else {
+                        $options[$key] = $value;
+                    }
                 }
             });
         }
