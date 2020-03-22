@@ -20,6 +20,9 @@ use Framework\Middleware\CorsAllowOriginMiddleware;
 class ApiModule extends Module
 {
 
+
+    public const MIGRATIONS = __DIR__ . '/db/migrations';
+
     /**
      * ApiModule constructor.
      * @param ContainerInterface $c
