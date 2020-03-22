@@ -1946,7 +1946,7 @@ class Paysagest extends Phinx\Migration\AbstractMigration
             ])
             ->create();
 
-            $this->execute("CREATE DEFINER = CURRENT_USER TRIGGER `paysagest`.`entreprise_AFTER_INSERT` 
+        $this->execute("CREATE DEFINER = CURRENT_USER TRIGGER `entreprise_AFTER_INSERT` 
             AFTER INSERT ON `entreprise` FOR EACH ROW
             BEGIN
             DECLARE old_code VARCHAR(32);
@@ -2024,7 +2024,94 @@ class Paysagest extends Phinx\Migration\AbstractMigration
             
             INSERT INTO dernier_code (entreprise_id, table_nom, colonne, code_table, prochain_code)
             VALUES (NEW.id, 'contrat', 'code_contrat', old_code, new_code);
+            END"
+        );
+
+        $this->execute("CREATE TRIGGER `client_AFTER_INSERT` 
+            AFTER INSERT ON `client` FOR EACH ROW
+            BEGIN
+            DECLARE len INTEGER;
+            DECLARE new_code VARCHAR(32);
+            DECLARE num_code INTEGER UNSIGNED;
+            DECLARE pref VARCHAR(16);
+            
+                IF (NEW.code_client IS NOT NULL) THEN
+                    SET pref = (SELECT COALESCE(libelle, 'CL') from prefix 
+                                WHERE table_nom = 'client' AND entreprise_id = NEW.entreprise_id);
+                    SET len = char_length(pref);
+                    SET new_code = substring(NEW.code_client, len + 1);
+                    SET num_code = CAST(new_code AS UNSIGNED);
+                    SET new_code = CONCAT(pref, num_code +1);
+                    
+                    INSERT INTO dernier_code (entreprise_id, table_nom, colonne, code_table, prochain_code)
+                    VALUES (NEW.entreprise_id, 'client', 'code_client', NEW.code_client, new_code);
+                END IF;
+            END"
+        );
+
+        $this->execute("CREATE TRIGGER `facture_AFTER_INSERT` 
+            AFTER INSERT ON `facture` FOR EACH ROW
+            BEGIN
+            DECLARE len INTEGER;
+            DECLARE new_code VARCHAR(32);
+            DECLARE num_code INTEGER UNSIGNED;
+            DECLARE pref VARCHAR(16);
+            
+                IF (NEW.code_facture IS NOT NULL) THEN
+                    SET pref = (SELECT COALESCE(libelle, 'FC') from prefix 
+                                WHERE table_nom = 'facture' AND entreprise_id = NEW.entreprise_id);
+                    SET len = char_length(pref);
+                    SET new_code = substring(NEW.code_facture, len + 1);
+                    SET num_code = CAST(new_code AS UNSIGNED);
+                    SET new_code = CONCAT(pref, num_code +1);
+                    
+                    INSERT INTO dernier_code (entreprise_id, table_nom, colonne, code_table, prochain_code)
+                    VALUES (NEW.entreprise_id, 'facture', 'code_facture', NEW.code_facture, new_code);
+                END IF;
+            END"
+        );
+
+        $this->execute("CREATE TRIGGER `devis_AFTER_INSERT` 
+            AFTER INSERT ON `devis` FOR EACH ROW
+            BEGIN
+            DECLARE len INTEGER;
+            DECLARE new_code VARCHAR(32);
+            DECLARE num_code INTEGER UNSIGNED;
+            DECLARE pref VARCHAR(16);
+                IF (NEW.code_devis IS NOT NULL) THEN
+                    SET pref = (SELECT COALESCE(libelle, 'DC') from prefix 
+                                WHERE table_nom = 'devis' AND entreprise_id = NEW.entreprise_id);
+                    SET len = char_length(pref);
+                    SET new_code = substring(NEW.code_devis, len + 1);
+                    SET num_code = CAST(new_code AS UNSIGNED);
+                    SET new_code = CONCAT(pref, num_code +1);
+                    
+                    INSERT INTO dernier_code (entreprise_id, table_nom, colonne, code_table, prochain_code)
+                    VALUES (NEW.entreprise_id, 'devis', 'code_devis', NEW.code_devis, new_code);
+                END IF;
             END
-            ");
+        ");
+
+        $this->execute("CREATE TRIGGER `contrat_AFTER_INSERT` 
+            AFTER INSERT ON `contrat` FOR EACH ROW
+            BEGIN
+            DECLARE len INTEGER;
+            DECLARE new_code VARCHAR(32);
+            DECLARE num_code INTEGER UNSIGNED;
+            DECLARE pref VARCHAR(16);
+            
+                IF (NEW.code_contrat IS NOT NULL) THEN
+                    SET pref = (SELECT COALESCE(libelle, 'C') from prefix 
+                                WHERE table_nom = 'contrat' AND entreprise_id = NEW.entreprise_id);
+                    SET len = char_length(pref);
+                    SET new_code = substring(NEW.code_contrat, len + 1);
+                    SET num_code = CAST(new_code AS UNSIGNED);
+                    SET new_code = CONCAT(pref, num_code +1);
+                    
+                    INSERT INTO dernier_code (entreprise_id, table_nom, colonne, code_table, prochain_code)
+                    VALUES (NEW.entreprise_id, 'contrat', 'code_contrat', NEW.code_contrat, new_code);
+                END IF;
+            END
+        ");
     }
 }
