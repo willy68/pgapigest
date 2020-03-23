@@ -106,6 +106,41 @@ class {$model_class}Controller extends AbstractApiController
      * @var string
      */
     protected \$model = {$model_class}::class;
+
+    /**
+     * Get list of record
+     *
+     * @param ServerRequestInterface \$request
+     * @return ResponseInterface
+     */
+    public function list(ServerRequestInterface \$request): ResponseInterface
+    {
+        \$options = [];
+        \$attributes = \$request->getAttributes();
+
+        if (!empty(\$this->foreignKey) && (isset(\$attributes[\$this->foreignKey]))) {
+            \$options['conditions'] = [\$this->foreignKey . ' = ?', \$attributes[\$this->foreignKey]];
+        }
+
+        \$options = \$this->getQueryOption(\$request, \$options);
+        try {
+            if (!empty(\$options)) {
+                \$models = \$this->model::all(\$options);
+            } else {
+                \$models = \$this->model::all();
+            }
+        } catch (\ActiveRecord\RecordNotFound \$e) {
+            return new Response(404);
+        }
+        if (empty(\$models)) {
+            return new Response(404);
+        }
+        \$json = \$this->jsonArray(
+            \$models,
+            isset(\$options['include']) ? ['include' => \$options['include']] : []
+        );
+        return new Response(200, [], \$json);
+    }
 }";
       }
     }
