@@ -26,7 +26,8 @@
     "autoload": {
         "psr-4": {
             "Framework\\": "src/Framework",
-            "App\\": "app"
+            "App\\": "app",
+            "Application\\Console\\": "bin/src"
         }
     },
     "require-dev": {
@@ -35,6 +36,7 @@
         "phpunit/phpunit": "^8.5",
         "robmorgan/phinx": "^0.11.4",
         "fzaninotto/faker": "^1.9",
-        "odan/phinx-migrations-generator": "^4.6"
+        "odan/phinx-migrations-generator": "^4.6",
+        "symfony/console": "^5.0"
     }
 }

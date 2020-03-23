@@ -47,3 +47,4 @@ database.php
 /generated_routes
 /generated_controllers
 routes.xml
+tmp

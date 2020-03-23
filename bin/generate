@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
+use Application\Console\ConsoleApplication;
+use Application\Console\ControllerCommand;
+
+putenv("ENV=dev");
+
+$app = new ConsoleApplication([
+    dirname(__DIR__) . '/config/config.php',
+    dirname(__DIR__) . '/config/database.php'
+]);
+
+$c = $app->getContainer();
+
+$app->add(new ControllerCommand($c));
+$app -> run();
