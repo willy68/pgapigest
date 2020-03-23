@@ -34,6 +34,6 @@ class InitialSeeder extends AbstractSeed
         $data[] = ['libelle' => 'terminé'];
         $data[] = ['libelle' => 'rejeté'];
         $data[] = ['libelle' => 'brouillon'];
-        $this->table('status_devis')->insert($data)->save();
+        $this->table('statut_devis')->insert($data)->save();
     }
 }
