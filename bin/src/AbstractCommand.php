@@ -2,7 +2,6 @@
 
 namespace Application\Console;
 
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -10,21 +9,8 @@ class AbstractCommand extends SymfonyCommand
 {
     protected $controllerDir = null;
 
-    protected $query = "SHOW TABLES FROM ";
-
-    protected $db = null;
-
-    /**
-     * pdo instance
-     *
-     * @var \PDO
-     */
-    protected $dao = null;
-
-    public function __construct(ContainerInterface $c)
+    public function __construct()
     {
-        $this->dao = $c->get(\PDO::class);
-        $this->db = $c->get('database.name');
         $this->controllerDir = dirname(
             dirname(
             __DIR__)) .
@@ -32,61 +18,6 @@ class AbstractCommand extends SymfonyCommand
             'generated_controllers'
         ;
         parent::__construct();
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param string $query
-     * @return \PDOStatement|bool
-     */
-    protected function getTables(string $query)
-    {
-        $tables = $this->dao->query($query);
-        return $tables;
-    }
-  
-    /**
-     * Undocumented function
-     *
-     * @param string $query
-     * @return \PDOStatement|bool
-     */
-    protected function getColumns(string $query)
-    {
-        $columns = $this->dao->query($query);
-        return $columns;
-    }
-  
-    /**
-     * Undocumented function
-     *
-     * @param string $db
-     * @param string $table
-     * @return string
-     */
-    protected function getColumnsQuery(string $db, string $table): string
-    {
-        return "SELECT COLUMN_NAME
-      FROM INFORMATION_SCHEMA.COLUMNS
-      WHERE TABLE_SCHEMA = '{$db}' AND TABLE_NAME = '{$table}'
-      AND COLUMN_NAME NOT IN ('id','created_at','updated_at','password')";
-    }
-  
-    /**
-     *
-     *
-     * @param string $sql
-     * @return array
-     */
-    protected function getColumnsArray(string $sql): array
-    {
-        $columns = $this->getColumns($sql);
-        $cols = array();
-        while ($column = $columns->fetch(\PDO::FETCH_ASSOC)) {
-            $cols[] = $column['COLUMN_NAME'];
-        }
-        return $cols;
     }
 
     /**
