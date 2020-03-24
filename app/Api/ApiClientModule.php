@@ -13,7 +13,7 @@ use App\Api\Client\Civilite\CiviliteController;
 use Framework\Middleware\ActiveRecordMiddleware;
 use Framework\Middleware\ContentTypeJsonMiddleware;
 use Framework\Middleware\CorsAllowOriginMiddleware;
-use App\Api\Client\Adresse_type\Adresse_typeController;
+use App\Api\Client\AdresseType\AdresseTypeController;
 
 class ApiClientModule extends Module
 {
@@ -122,32 +122,32 @@ class ApiClientModule extends Module
             // Adresse_type
             $route->get(
                 '/adresse_type/{id:\d+}',
-                Adresse_typeController::class . '::get',
+                AdresseTypeController::class . '::get',
                 'adresse_type.get'
             );
             $route->get(
                 '/adresse_types',
-                Adresse_typeController::class . '::list',
+                AdresseTypeController::class . '::list',
                 'adresse_type.all'
             );
             $route->get(
                 '/adresse_type/list',
-                Adresse_typeController::class . '::list',
+                AdresseTypeController::class . '::list',
                 'adresse_type.list'
             );
             $route->post(
                 '/adresse_type',
-                Adresse_typeController::class . '::create',
+                AdresseTypeController::class . '::create',
                 'adresse_type.create'
             );
             $route->put(
                 '/adresse_type/{id:\d+}',
-                Adresse_typeController::class . '::update',
+                AdresseTypeController::class . '::update',
                 'adresse_type.update'
             );
             $route->delete(
                 '/adresse_type/{id:\d+}',
-                Adresse_typeController::class . '::delete',
+                AdresseTypeController::class . '::delete',
                 'adresse_type.delete'
             );
         })

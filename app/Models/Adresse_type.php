@@ -4,7 +4,7 @@ namespace App\Models;
 
 use ActiveRecord;
   
-class Adresse_type extends ActiveRecord\Model
+class AdresseType extends ActiveRecord\Model
 {
     static $table_name = 'adresse_type';
 }

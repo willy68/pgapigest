@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Api\Client\Adresse_type;
+namespace App\Api\Client\AdresseType;
 
-use App\Models\Adresse_type;
+use App\Models\AdresseType;
 use App\Api\AbstractApiController;
 
-class Adresse_typeController extends AbstractApiController
+class AdresseTypeController extends AbstractApiController
 {
 
     /**
@@ -13,7 +13,7 @@ class Adresse_typeController extends AbstractApiController
      *
      * @var string
      */
-    protected $model = Adresse_type::class;
+    protected $model = AdresseType::class;
 
     /**
      * Default to 'entreprise_id'
