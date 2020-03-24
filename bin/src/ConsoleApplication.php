@@ -16,8 +16,7 @@ class ConsoleApplication extends Application
         array $config,
         string $name = 'UNKNOWN',
         string $version = 'UNKNOWN'
-    )
-    {
+    ) {
         parent::__construct($name, $version);
         $this->config = $config;
     }
@@ -44,5 +43,4 @@ class ConsoleApplication extends Application
         }
         return $this->container;
     }
-    
 }

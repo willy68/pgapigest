@@ -66,5 +66,4 @@ class ControllerCommand extends AbstractPHPCommand
         }
         return 0;
     }
-
 }

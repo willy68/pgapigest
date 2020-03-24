@@ -40,8 +40,8 @@ class AdresseController extends AbstractApiController
                     $adresse_type_id['adresse_type_id']
                 ];
             } else {
-               $conditions = [$this->foreignKey . ' = ?', $attributes[$this->foreignKey]]; 
-            } 
+                $conditions = [$this->foreignKey . ' = ?', $attributes[$this->foreignKey]];
+            }
         }
         if (!empty($conditions)) {
             $options['conditions'] = $conditions;
@@ -60,6 +60,6 @@ class AdresseController extends AbstractApiController
             return new Response(404);
         }
         $json = $this->jsonArray($models);
-        return new Response(200, [], $json);        
+        return new Response(200, [], $json);
     }
 }

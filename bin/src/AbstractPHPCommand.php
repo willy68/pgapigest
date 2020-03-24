@@ -2,7 +2,6 @@
 
 namespace Application\Console;
 
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class AbstractPHPCommand extends AbstractCommand
@@ -28,10 +27,9 @@ class AbstractPHPCommand extends AbstractCommand
         string $model_name,
         string $filename,
         OutputInterface $output
-    ): int
-    {
-      $model = $this->getPHPController($model_name);
-      return $this->saveFile($model, $filename, $output);
+    ): int {
+        $model = $this->getPHPController($model_name);
+        return $this->saveFile($model, $filename, $output);
     }
     
     /**
@@ -42,14 +40,13 @@ class AbstractPHPCommand extends AbstractCommand
      */
     protected function getPHPController(string $model_name): string
     {
-      $model_class = ucfirst($model_name);
+        $model_class = ucfirst($model_name);
   
-      if ($this->template && file_exists($this->template)) {
-  
-        $controller = include $this->template;
-        return $controller;
-      } else {
-        return "<?php
+        if ($this->template && file_exists($this->template)) {
+            $controller = include $this->template;
+            return $controller;
+        } else {
+            return "<?php
 namespace " . $this->namespace . "\\{$model_class};
   
 use App\Models\\{$model_class};
@@ -103,6 +100,6 @@ class {$model_class}Controller extends AbstractApiController
         return new Response(200, [], \$json);
     }
 }";
-      }
+        }
     }
 }

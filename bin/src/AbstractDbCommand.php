@@ -9,7 +9,7 @@ class AbstractDbCommand extends AbstractCommand
     use DatabaseCommandTrait;
 
     /**
-     * 
+     *
      *
      * @var string
      */
@@ -32,6 +32,6 @@ class AbstractDbCommand extends AbstractCommand
     public function __construct(ContainerInterface $c)
     {
         $this->dao = $c->get(\PDO::class);
-        $this->db = $c->get('database.name');        
+        $this->db = $c->get('database.name');
     }
 }

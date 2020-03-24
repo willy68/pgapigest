@@ -46,11 +46,11 @@ class CpvilleController extends AbstractApiController
         $options['conditions'] = [$col . ' LIKE ?', $params['search'] . '%'];
     
         try {
-          if (!empty($options)) {
-            $cpville = $this->model::all($options);
-          } else {
-            $cpville = $this->model::all();
-          }
+            if (!empty($options)) {
+                $cpville = $this->model::all($options);
+            } else {
+                $cpville = $this->model::all();
+            }
         } catch (\ActiveRecord\RecordNotFound $e) {
             return new Response(404);
         }

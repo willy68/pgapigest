@@ -56,13 +56,13 @@ class ApiModule extends Module
             );
             // Cpville
             $route->post(
-                '/cpville/search/{ville:ville}', 
-                CpvilleController::class . '::search', 
+                '/cpville/search/{ville:ville}',
+                CpvilleController::class . '::search',
                 'ville.post.search'
             );
             $route->post(
-                '/cpville/search/{cp:cp}', 
-                CpvilleController::class . '::search', 
+                '/cpville/search/{cp:cp}',
+                CpvilleController::class . '::search',
                 'cp.post.search'
             );
             $route->get(
@@ -71,7 +71,7 @@ class ApiModule extends Module
                 'ville.get.search'
             );
             $route->get(
-                '/cpville/search/{cp:cp}/{search:\d+}', 
+                '/cpville/search/{cp:cp}/{search:\d+}',
                 CpvilleController::class . '::search',
                 'cp.get.search'
             );
@@ -148,8 +148,8 @@ class ApiModule extends Module
                 'dernier_code.get'
             );
             $route->get(
-                '/dernier_codes', 
-                Dernier_codeController::class . '::list', 
+                '/dernier_codes',
+                Dernier_codeController::class . '::list',
                 'dernier_code.all'
             );
             $route->get(

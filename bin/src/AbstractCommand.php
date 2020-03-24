@@ -13,7 +13,9 @@ class AbstractCommand extends SymfonyCommand
     {
         $this->controllerDir = dirname(
             dirname(
-            __DIR__)) .
+                __DIR__
+            )
+        ) .
             DIRECTORY_SEPARATOR .
             'generated_controllers'
         ;

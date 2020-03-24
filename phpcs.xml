@@ -8,8 +8,9 @@
 
   <file>src</file>
   <file>app</file>
+  <file>bin</file>
 
-  <exclude-pattern>app/Blog/db/*$</exclude-pattern>
+  <exclude-pattern>app/Api/db/*$</exclude-pattern>
   <exclude-pattern>app/Auth/db/*$</exclude-pattern>
   <exclude-pattern>*/views/*$</exclude-pattern>
 

@@ -26,8 +26,7 @@ class DemoController
         ServerRequestInterface $request,
         RendererInterface $renderer,
         \PDO $pdo
-    ): string
-    {
+    ): string {
         /** @var \User $user */
         $user = User::find_by_email(['email' => 'william.lety@gmail.com']);
         $user_array = $user->to_array();

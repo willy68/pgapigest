@@ -25,15 +25,15 @@ class Dernier_codeController extends AbstractApiController
             return new Response(400);
         }
         if (isset($attributes[$this->foreignKey])) {
-          $options['conditions'] = [
+            $options['conditions'] = [
             $this->foreignKey . ' = ? AND table_nom = ?',
             $attributes[$this->foreignKey], $attributes['table_nom']
-          ];
+            ];
         } else {
-          $options['conditions'] = ['table_nom = ?', $request->getAttribute('table_nom')];
+            $options['conditions'] = ['table_nom = ?', $request->getAttribute('table_nom')];
         }
         try {
-          $dernier_code = $this->model::last($options);
+            $dernier_code = $this->model::last($options);
         } catch (\ActiveRecord\ActiveRecordException $e) {
             return new Response(400);
         }
@@ -42,6 +42,5 @@ class Dernier_codeController extends AbstractApiController
         }
         $json = $dernier_code->to_json();
         return new Response(200, [], $json);
-
     }
 }

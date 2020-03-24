@@ -2024,8 +2024,7 @@ class Paysagest extends Phinx\Migration\AbstractMigration
             
             INSERT INTO dernier_code (entreprise_id, table_nom, colonne, code_table, prochain_code)
             VALUES (NEW.id, 'contrat', 'code_contrat', old_code, new_code);
-            END"
-        );
+            END");
 
         $this->execute("CREATE TRIGGER `client_AFTER_INSERT` 
             AFTER INSERT ON `client` FOR EACH ROW
@@ -2046,8 +2045,7 @@ class Paysagest extends Phinx\Migration\AbstractMigration
                     INSERT INTO dernier_code (entreprise_id, table_nom, colonne, code_table, prochain_code)
                     VALUES (NEW.entreprise_id, 'client', 'code_client', NEW.code_client, new_code);
                 END IF;
-            END"
-        );
+            END");
 
         $this->execute("CREATE TRIGGER `facture_AFTER_INSERT` 
             AFTER INSERT ON `facture` FOR EACH ROW
@@ -2068,8 +2066,7 @@ class Paysagest extends Phinx\Migration\AbstractMigration
                     INSERT INTO dernier_code (entreprise_id, table_nom, colonne, code_table, prochain_code)
                     VALUES (NEW.entreprise_id, 'facture', 'code_facture', NEW.code_facture, new_code);
                 END IF;
-            END"
-        );
+            END");
 
         $this->execute("CREATE TRIGGER `devis_AFTER_INSERT` 
             AFTER INSERT ON `devis` FOR EACH ROW

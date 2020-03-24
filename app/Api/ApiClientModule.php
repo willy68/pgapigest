@@ -150,7 +150,6 @@ class ApiClientModule extends Module
                 Adresse_typeController::class . '::delete',
                 'adresse_type.delete'
             );
-            
         })
             // ->middleware(JwtAuthentication::class)
             ->middleware(CorsAllowOriginMiddleware::class)

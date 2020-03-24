@@ -89,7 +89,11 @@ class AbstractApiController
         } catch (\ActiveRecord\RecordNotFound $e) {
             return new Response(404);
         }
-        return new Response(200, [], $model->to_json(isset($options['include']) ? ['include' => $options['include']] : []));
+        return new Response(
+            200, 
+            [], 
+            $model->to_json(isset($options['include']) ? ['include' => $options['include']] : [])
+        );
     }
     /**
      * Update model by id
@@ -209,7 +213,7 @@ class AbstractApiController
     protected function getQueryOption(ServerRequestInterface $request, array $options, ?array $filter = []): array
     {
         if (empty($filter)) {
-        $filter = ['limit', 'offset', 'order', 'include'];
+            $filter = ['limit', 'offset', 'order', 'include'];
         }
         $queryOptions = $request->getQueryParams();
         if (!empty($queryOptions)) {
@@ -227,7 +231,7 @@ class AbstractApiController
     }
 
     /**
-     * 
+     *
      * Transform le tableau $record
      * en un tableau d'objets json
      *

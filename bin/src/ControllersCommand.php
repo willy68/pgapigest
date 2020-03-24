@@ -13,7 +13,7 @@ class ControllersCommand extends AbstractPHPCommand
     use DatabaseCommandTrait;
     
     /**
-     * 
+     *
      *
      * @var string
      */
@@ -89,7 +89,7 @@ class ControllersCommand extends AbstractPHPCommand
                 $output->writeln('Fin du programme: Wrong file' . $file);
                 return -1;
             }
-          }
+        }
         return 0;
     }
 }
