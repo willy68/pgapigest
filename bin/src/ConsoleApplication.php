@@ -12,14 +12,18 @@ class ConsoleApplication extends Application
 
     public $config = [];
 
-    public function __construct(array $config)
+    public function __construct(
+        array $config,
+        string $name = 'UNKNOWN',
+        string $version = 'UNKNOWN'
+    )
     {
-        parent::__construct();
+        parent::__construct($name, $version);
         $this->config = $config;
     }
 
     /**
-     * Undocumented function
+     * Get DI container
      *
      * @return ContainerInterface
      * @throws Exception

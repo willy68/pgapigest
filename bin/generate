@@ -4,8 +4,7 @@
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use Application\Console\ConsoleApplication;
-use Application\Console\ControllerCommand;
-use Application\Console\ControllersCommand;
+use Application\Console\DICommandLoader;
 
 putenv("ENV=dev");
 
@@ -15,7 +14,5 @@ $app = new ConsoleApplication([
 ]);
 
 $c = $app->getContainer();
-
-$app->add(new ControllerCommand());
-$app->add(new ControllersCommand($c));
-$app -> run();
+$app->setCommandLoader(DICommandLoader::getDICommandLoader($c));
+$app->run();
