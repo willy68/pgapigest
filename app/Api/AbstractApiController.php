@@ -90,8 +90,8 @@ class AbstractApiController
             return new Response(404);
         }
         return new Response(
-            200, 
-            [], 
+            200,
+            [],
             $model->to_json(isset($options['include']) ? ['include' => $options['include']] : [])
         );
     }
