@@ -12,7 +12,7 @@ use Psr\Container\ContainerInterface;
 use App\Api\Cpville\CpvilleController;
 use Tuupola\Middleware\JwtAuthentication;
 use App\Api\Entreprise\EntrepriseController;
-use App\Api\Dernier_code\Dernier_codeController;
+use App\Api\DernierCode\DernierCodeController;
 use Framework\Middleware\ActiveRecordMiddleware;
 use Framework\Middleware\ContentTypeJsonMiddleware;
 use Framework\Middleware\CorsAllowOriginMiddleware;
@@ -144,37 +144,37 @@ class ApiModule extends Module
             // Dernier_code
             $route->get(
                 '/entreprise/{entreprise_id:\d+}/dernier_code/{id:\d+}',
-                Dernier_codeController::class . '::get',
+                DernierCodeController::class . '::get',
                 'dernier_code.get'
             );
             $route->get(
                 '/dernier_codes',
-                Dernier_codeController::class . '::list',
+                DernierCodeController::class . '::list',
                 'dernier_code.all'
             );
             $route->get(
                 '/entreprise/{entreprise_id:\d+}/dernier_code/list',
-                Dernier_codeController::class . '::list',
+                DernierCodeController::class . '::list',
                 'dernier_code.list'
             );
             $route->get(
                 '/entreprise/{entreprise_id:\d+}/dernier_code/{table_nom:[0-9a-zA-Z_]+}',
-                Dernier_codeController::class . '::forTable',
+                DernierCodeController::class . '::forTable',
                 'dernier_code.forTable'
             );
             $route->post(
                 '/entreprise/{entreprise_id:\d+}/dernier_code',
-                Dernier_codeController::class . '::create',
+                DernierCodeController::class . '::create',
                 'dernier_code.create'
             );
             $route->put(
                 '/entreprise/{entreprise_id:\d+}/dernier_code/{id:\d+}',
-                Dernier_codeController::class . '::update',
+                DernierCodeController::class . '::update',
                 'dernier_code.update'
             );
             $route->delete(
                 '/entreprise/{entreprise_id:\d+}/dernier_code/{id:\d+}',
-                Dernier_codeController::class . '::delete',
+                DernierCodeController::class . '::delete',
                 'dernier_code.delete'
             );
 

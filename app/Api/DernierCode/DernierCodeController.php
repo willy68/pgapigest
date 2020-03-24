@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Api\Dernier_code;
+namespace App\Api\DernierCode;
 
-use App\Models\Dernier_code;
+use App\Models\DernierCode;
 use GuzzleHttp\Psr7\Response;
 use App\Api\AbstractApiController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class Dernier_codeController extends AbstractApiController
+class DernierCodeController extends AbstractApiController
 {
     /**
      * Model class
      *
      * @var string
      */
-    protected $model = Dernier_code::class;
+    protected $model = DernierCode::class;
 
     public function forTable(ServerRequestInterface $request): ResponseInterface
     {
