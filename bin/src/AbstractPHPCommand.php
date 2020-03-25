@@ -66,6 +66,12 @@ class {$modelClass}Controller extends AbstractApiController
     protected \$model = {$modelClass}::class;
 
     /**
+     * Default to 'entreprise_id'
+     * @var string
+     */
+    protected \$foreignKey = '';
+
+    /**
      * Get list of record
      *
      * @param ServerRequestInterface \$request

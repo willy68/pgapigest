@@ -86,8 +86,7 @@ class ControllersCommand extends AbstractPHPCommand
             $modelName = $table[0];
             $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($modelName) . 'Controller.php';
             if ($this->saveController($modelName, $file, $output) === -1) {
-                $output->writeln('Fin du programme: Wrong file' . $file);
-                return -1;
+                continue;
             }
         }
         return 0;
