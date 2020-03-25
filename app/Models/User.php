@@ -6,8 +6,8 @@ use ActiveRecord;
   
 class User extends ActiveRecord\Model
 {
-    static $table_name = 'user';
-    static $has_many = array(
+    public static $table_name = 'user';
+    public static $has_many = array(
     array('administrateurs', 'class_name' => 'Administrateur')
     );
 }

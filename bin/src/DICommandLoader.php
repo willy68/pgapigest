@@ -12,7 +12,9 @@ class DICommandLoader
     {
         return new ContainerCommandLoader($c, [
             'controller' => ControllerCommand::class,
-            'controller:all' => ControllersCommand::class
+            'controller:all' => ControllersCommand::class,
+            'model' => ModelCommand::class,
+            'model:all' => ModelsCommand::class
         ]);
     }
 }

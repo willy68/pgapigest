@@ -6,5 +6,5 @@ use ActiveRecord;
   
 class Civilite extends ActiveRecord\Model
 {
-    static $table_name = 'civilite';
+    public static $table_name = 'civilite';
 }

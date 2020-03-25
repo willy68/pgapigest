@@ -24,12 +24,12 @@ class AbstractPHPCommand extends AbstractCommand
      * @return int
      */
     protected function saveController(
-        string $model_name,
+        string $modelName,
         string $filename,
         OutputInterface $output
     ): int {
-        $model = $this->getPHPController($model_name);
-        return $this->saveFile($model, $filename, $output);
+        $php = $this->getPHPController($modelName);
+        return $this->saveFile($php, $filename, $output);
     }
     
     /**
@@ -38,24 +38,24 @@ class AbstractPHPCommand extends AbstractCommand
      * @param string $model_name
      * @return string
      */
-    protected function getPHPController(string $model_name): string
+    protected function getPHPController(string $modelName): string
     {
-        $model_class = ucfirst($model_name);
+        $modelClass = $this->getClassName($modelName);
   
         if ($this->template && file_exists($this->template)) {
             $controller = include $this->template;
             return $controller;
         } else {
             return "<?php
-namespace " . $this->namespace . "\\{$model_class};
+namespace " . $this->namespace . "\\{$modelClass};
   
-use App\Models\\{$model_class};
+use App\Models\\{$modelClass};
 use GuzzleHttp\Psr7\Response;
 use App\Api\AbstractApiController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class {$model_class}Controller extends AbstractApiController
+class {$modelClass}Controller extends AbstractApiController
 {
   
     /**
@@ -63,7 +63,7 @@ class {$model_class}Controller extends AbstractApiController
      *
      * @var string
      */
-    protected \$model = {$model_class}::class;
+    protected \$model = {$modelClass}::class;
 
     /**
      * Get list of record

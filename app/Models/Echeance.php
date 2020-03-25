@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use ActiveRecord;
-  
+
 class Echeance extends ActiveRecord\Model
 {
-    static $table_name = 'echeance';
+    public static $table_name = 'echeance';
 }

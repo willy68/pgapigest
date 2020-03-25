@@ -6,5 +6,5 @@ use ActiveRecord;
   
 class AdresseType extends ActiveRecord\Model
 {
-    static $table_name = 'adresse_type';
+    public static $table_name = 'adresse_type';
 }

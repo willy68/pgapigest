@@ -6,5 +6,5 @@ use ActiveRecord;
   
 class Role extends ActiveRecord\Model
 {
-    static $table_name = 'role';
+    public static $table_name = 'role';
 }

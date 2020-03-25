@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use ActiveRecord;
-  
+
 class Contrat extends ActiveRecord\Model
 {
-    static $table_name = 'contrat';
+    public static $table_name = 'contrat';
 }

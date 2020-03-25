@@ -6,8 +6,8 @@ use ActiveRecord;
   
 class Administrateur extends ActiveRecord\Model
 {
-    static $table_name = 'administrateur';
-    static $belongs_to = array(
+    public static $table_name = 'administrateur';
+    public static $belongs_to = array(
     array('user', 'class_name' => 'User'),
     array('entreprise', 'class_name' => 'Entreprise')
     );

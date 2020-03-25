@@ -2,16 +2,17 @@
 
 namespace Application\Console;
 
+use PDO;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ControllersCommand extends AbstractPHPCommand
+class ModelsCommand extends AbstractModelCommand
 {
     use DatabaseCommandTrait;
-
+    
     /**
      *
      *
@@ -42,9 +43,9 @@ class ControllersCommand extends AbstractPHPCommand
 
     protected function configure()
     {
-        $this->setName('controller:all')
-        ->setDescription('Controller:all create all controller based on db models.')
-        ->setHelp('This command create all Controller based on db models with right name')
+        $this->setName('model:all')
+        ->setDescription('model:all create all ActiveRecord model class based on db models.')
+        ->setHelp('This command create all ActiveRecord model class based based on db models with right name')
         ->setDefinition(
             new InputDefinition([
                 new InputOption('namespace', 's', InputOption::VALUE_OPTIONAL),
@@ -63,31 +64,30 @@ class ControllersCommand extends AbstractPHPCommand
         $this->template = $input->getOption('template');
         $this->dir = $input->getOption('dir');
 
-        return $this->makeController($output);
+        return $this->makeModels($output);
     }
 
     /**
-     * Make single controller
      *
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @param OutputInterface $output
      * @return int
      */
-    public function makeController(OutputInterface $output): int
+    public function makeModels(OutputInterface $output): int
     {
         $tables = $this->getTables($this->query . $this->db);
-        $dir = $this->dir ? $this->dir
-            : $this->controllerDir;
+  
+        $dir = $this->dir ? $this->dir : $this->modelDir;
         if ($this->createDir($dir, $output) === -1) {
             $output->writeln('Fin du programme: Wrong directory');
             return -1;
         }
-
+  
         while ($table = $tables->fetch(\PDO::FETCH_NUM)) {
-            $modelName = $table[0];
-            $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($modelName) . 'Controller.php';
-            if ($this->saveController($modelName, $file, $output) === -1) {
-                $output->writeln('Fin du programme: Wrong file' . $file);
-                return -1;
+            $model = $table[0];
+            $file = $dir . DIRECTORY_SEPARATOR . $this->getclassName($model) . '.php';
+            if ($this->saveModel($model, $file, $output) === -1) {
+                continue;
             }
         }
         return 0;

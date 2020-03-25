@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use ActiveRecord;
-  
+
 class Prefix extends ActiveRecord\Model
 {
-    static $table_name = 'prefix';
+    public static $table_name = 'prefix';
 }

@@ -9,6 +9,8 @@ class AbstractCommand extends SymfonyCommand
 {
     protected $controllerDir = null;
 
+    protected $modelDir = null;
+
     public function __construct()
     {
         $this->controllerDir = dirname(
@@ -18,6 +20,14 @@ class AbstractCommand extends SymfonyCommand
         ) .
             DIRECTORY_SEPARATOR .
             'generated_controllers'
+        ;
+        $this->modelDir = dirname(
+            dirname(
+                __DIR__
+            )
+        ) .
+            DIRECTORY_SEPARATOR .
+            'generated_models'
         ;
         parent::__construct();
     }
@@ -66,5 +76,14 @@ class AbstractCommand extends SymfonyCommand
             $output->writeln("Le fichier " . $filename . " existe déjà, opération non permise");
             return -1;
         }
+    }
+
+    /**
+     * @param string $fieldName
+     * @return string
+     */
+    protected function getclassName(string $modelName): string
+    {
+        return join('', array_map('ucfirst', explode('_', $modelName)));
     }
 }

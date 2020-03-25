@@ -6,7 +6,7 @@ use ActiveRecord;
 
 class Cpville extends ActiveRecord\Model
 {
-    static $connection = 'ajax';
-    static $table_name = 'cp_autocomplete';
-    static $primary_key = 'CP';
+    public static $connection = 'ajax';
+    public static $table_name = 'cp_autocomplete';
+    public static $primary_key = 'CP';
 }

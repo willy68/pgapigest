@@ -10,15 +10,15 @@ declare(strict_types=1);
 
 namespace Framework\Middleware;
 
-use function implode;
-
+use Psr\Http\Server\MiddlewareInterface;
 use GuzzleHttp\Psr7\Response;
 use Framework\Router\RouteResult;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Fig\Http\Message\StatusCodeInterface as StatusCode;
+
+use function implode;
 
 /**
  * Emit a 405 Method Not Allowed response

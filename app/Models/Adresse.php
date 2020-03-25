@@ -6,6 +6,6 @@ use ActiveRecord;
   
 class Adresse extends ActiveRecord\Model
 {
-    static $table_name = 'adresse';
-    static $belongs_to = [['client', 'class_name' => 'Client']];
+    public static $table_name = 'adresse';
+    public static $belongs_to = [['client', 'class_name' => 'Client']];
 }
