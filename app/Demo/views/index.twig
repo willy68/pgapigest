@@ -14,9 +14,9 @@
 
 {% if params %}
 
-{% for param in params %}
+{% for key, param in params %}
 
-<pre> {{param}}  </pre>
+<pre> {{ key }}: {{param}}  </pre>
 
 {% endfor %}
 
