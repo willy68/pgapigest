@@ -6,22 +6,18 @@ use Framework\Module;
 use Framework\Router;
 use Framework\Router\RouteGroup;
 use App\Api\Client\ClientController;
-use Psr\Container\ContainerInterface;
 use Tuupola\Middleware\JwtAuthentication;
 use App\Api\Client\Adresse\AdresseController;
 use App\Api\Client\Civilite\CiviliteController;
-use Framework\Middleware\ActiveRecordMiddleware;
 use Framework\Middleware\ContentTypeJsonMiddleware;
 use Framework\Middleware\CorsAllowOriginMiddleware;
 use App\Api\Client\AdresseType\AdresseTypeController;
 
 class ApiClientModule extends Module
 {
-    public function __construct(ContainerInterface $c)
+    public function __construct(Router $router)
     {
-        /** @var Router $router */
-        $router = $c->get(Router::class);
-        
+
         $router->group('/api', function (RouteGroup $route) {
             // Client
             $route->get(
@@ -153,7 +149,6 @@ class ApiClientModule extends Module
         })
             // ->middleware(JwtAuthentication::class)
             ->middleware(CorsAllowOriginMiddleware::class)
-            ->middleware(ActiveRecordMiddleware::class)
             ->middleware(ContentTypeJsonMiddleware::class);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-require 'public/index.php';
+require 'app/Bootstrap/Bootstrap.php';
 
 $migrations = [];
 $seeds = [];

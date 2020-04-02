@@ -97,27 +97,7 @@ class CrudAction
     }
 
     /**
-     * Undocumented function
-     *
-     * @param Request $request
-     * @return void
-     */
-    /*public function __invoke(Request $request)
-    {
-        if ($request->getMethod() === 'DELETE') {
-            return $this->delete($request);
-        }
-        if (substr($request->getUri(), -3) === 'new') {
-            return $this->create($request);
-        }
-        if ($request->getAttribute('id')) {
-            return $this->edit($request);
-        }
-        return $this->index($request);
-    }*/
-
-    /**
-     * Undocumented function
+     * Liste les entitys Method GET
      *
      * @param Request $request
      * @return string
@@ -127,14 +107,11 @@ class CrudAction
         $params = $request->getQueryParams();
         $items = $this->table->findAll()->paginate(12, $params['p'] ?? 1);
 
-        // for PHPRenderer
-        // $this->renderer->addGlobal('router', $this->router);
-
         return $this->renderer->render($this->viewPath . '/index', compact('items'));
     }
 
     /**
-     * Edite un article
+     * Edite un entity Method POST
      *
      * @param Request $request
      * @return ResponseInterface|string
@@ -165,7 +142,7 @@ class CrudAction
     }
 
     /**
-     * Crée un article
+     * Crée un entity Method POST
      *
      * @param Request $request
      * @return ResponseInterface|string
@@ -194,7 +171,7 @@ class CrudAction
     }
 
     /**
-     * Undocumented function
+     * Supprime un entity Method POST
      *
      * @param Request $request
      * @return ResponseInterface|string
@@ -206,7 +183,7 @@ class CrudAction
     }
 
     /**
-     * Undocumented function
+     * Récupère les paramètres POST
      *
      * @param Request $request
      * @param mixed $item

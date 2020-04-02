@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Framework\Middleware\Stack\MiddlewareAwareStackTrait;
 
 /**
- * Undocumented class
+ * Application
  */
 class App implements RequestHandlerInterface
 {
@@ -45,7 +45,8 @@ class App implements RequestHandlerInterface
      */
     public function __construct(array $config)
     {
-        $this->config = $config;
+        $this->config[] = dirname(__DIR__ ) . '/config/config.php';
+        $this->config = \array_merge($this->config, $config);
     }
 
     /**
@@ -59,6 +60,20 @@ class App implements RequestHandlerInterface
         $this->modules[] = $module;
         return $this;
     }
+
+        /**
+         * Undocumented function
+         *
+         * @param array $modules
+         * @return self
+         */
+        public function addModules(array $modules): self
+        {
+            foreach ($modules as $module) {
+                $this->addModule($module);
+            }
+            return $this;
+        }
 
     /**
      * Undocumented function
@@ -95,12 +110,15 @@ class App implements RequestHandlerInterface
     /**
      * Undocumented function
      *
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface|null $request
      * @return ResponseInterface
      * @throws Exception
      */
-    public function run(ServerRequestInterface $request): ResponseInterface
+    public function run(?ServerRequestInterface $request = null): ResponseInterface
     {
+        if ($request === null) {
+            $request = $this->getContainer()->get(ServerRequestInterface::class);
+        }
         foreach ($this->modules as $module) {
             $this->getContainer()->get($module);
         }
@@ -152,7 +170,7 @@ class App implements RequestHandlerInterface
      * @return object
      * @throws Exception
      */
-    
+
     private function getMiddleware()
     {
         return $this->shiftMiddleware($this->getContainer());

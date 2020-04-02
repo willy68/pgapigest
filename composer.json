@@ -1,5 +1,6 @@
 {
     "name": "willy/framework",
+    "description": "Monolitic library for pgapigest",
     "authors": [
         {
             "name": "William Lety",
@@ -25,9 +26,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Framework\\": "src/Framework",
-            "App\\": "app",
-            "Application\\Console\\": "bin/src"
+            "Framework\\": "package/pgframework/src/Framework",
+            "App\\": "app"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Application\\Console\\": "package/pgconsole/src"
         }
     },
     "require-dev": {
@@ -38,5 +43,9 @@
         "fzaninotto/faker": "^1.9",
         "odan/phinx-migrations-generator": "^4.6",
         "symfony/console": "^5.0"
-    }
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "bin": ["package/pgconsole/bin/generate"]
 }
