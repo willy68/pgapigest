@@ -48,5 +48,5 @@
     "config": {
         "bin-dir": "bin"
     },
-    "bin": ["package/pgconsole/bin/generate"]
+    "bin": ["package/willy68/pgconsole/bin/generate"]
 }
