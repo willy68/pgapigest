@@ -27,13 +27,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Framework\\": "package/pgframework/src/Framework",
+            "Framework\\": "package/willy68/pgframework/src/Framework",
             "App\\": "app"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Application\\Console\\": "package/pgconsole/src"
+            "Application\\Console\\": "package/willy68/pgconsole/src"
         }
     },
     "require-dev": {
