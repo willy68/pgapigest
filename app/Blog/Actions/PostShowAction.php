@@ -2,6 +2,7 @@
 
 namespace App\Blog\Actions;
 
+use App\Blog\Models\Posts;
 use App\Blog\Table\CategoryTable;
 use App\Blog\Table\PostTable;
 use Framework\Actions\RouterAwareAction;
@@ -29,20 +30,6 @@ class PostShowAction
     /**
      * Undocumented variable
      *
-     * @var PostTable
-     */
-    private $postTable;
-
-    /**
-     * Undocumented variable
-     *
-     * @var CategoryTable
-     */
-    private $categoryTable;
-
-    /**
-     * Undocumented variable
-     *
      * @var \Framework\Router
      */
     private $router;
@@ -54,14 +41,10 @@ class PostShowAction
      */
     public function __construct(
         RendererInterface $renderer,
-        Router $router,
-        PostTable $postTable,
-        CategoryTable $categoryTable
+        Router $router
     ) {
         $this->renderer = $renderer;
         $this->router = $router;
-        $this->postTable = $postTable;
-        $this->categoryTable = $categoryTable;
     }
 
     /**
@@ -73,7 +56,8 @@ class PostShowAction
     public function __invoke(Request $request)
     {
         $slug = $request->getAttribute('slug');
-        $post = $this->postTable->findWithCategory($request->getAttribute('id'));
+        // $post = $this->postTable->findWithCategory($request->getAttribute('id'));
+        $post = Posts::find($request->getAttribute('id'), ['include' => ['category']]);
 
         if ($post->slug !== $slug) {
             return $this->redirect('blog.show', [

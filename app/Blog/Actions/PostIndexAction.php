@@ -4,8 +4,6 @@ namespace App\Blog\Actions;
 
 use App\Blog\Models\Categories;
 use App\Blog\Models\Posts;
-use App\Blog\Table\CategoryTable;
-use App\Blog\Table\PostTable;
 use Framework\Actions\RouterAwareAction;
 use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -28,32 +26,14 @@ class PostIndexAction
     private $renderer;
 
     /**
-     * Undocumented variable
-     *
-     * @var PostTable
-     */
-    private $postTable;
-
-    /**
-     * Undocumented variable
-     *
-     * @var CategoryTable
-     */
-    private $categoryTable;
-
-    /**
      * Undocumented function
      *
      * @param RendererInterface $renderer
      */
     public function __construct(
-        RendererInterface $renderer,
-        PostTable $postTable,
-        CategoryTable $categoryTable
+        RendererInterface $renderer
     ) {
         $this->renderer = $renderer;
-        $this->postTable = $postTable;
-        $this->categoryTable = $categoryTable;
     }
 
     /**
