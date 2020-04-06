@@ -5,6 +5,7 @@ use App\Blog\BlogModule;
 use App\Demo\DemoModule;
 use App\Admin\AdminModule;
 use App\Api\ApiClientModule;
+use App\Auth\AuthModule;
 use Framework\Middleware\MethodMiddleware;
 use Framework\Middleware\RouterMiddleware;
 use Framework\Middleware\ApiHeadMiddleware;
@@ -20,6 +21,7 @@ return [
         DemoModule::class,
         BlogModule::class,
         AdminModule::class,
+        AuthModule::class,
         ApiModule::class,
         ApiClientModule::class
     ],
