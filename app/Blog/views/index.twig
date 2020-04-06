@@ -34,19 +34,16 @@
 
 	<div class="row">
 		<div class="col-md-9">
-			{% for row in posts | batch(4) %}
+			{% for row in posts | batch(3) %}
 				<div class="card-deck mb-4">
-					<pre>
-						{{ dump(row) }}
-					</pre>
 					{% for post in row %}
-					<pre>
+					{#<pre>
 						{{ dump(post) }}
-					</pre>
+					</pre>#}
 						<div class="card">
-							{% if post.categoryName %}
+							{% if post.category %}
 								<div class="card-header">
-									{{ post.categoryName }}
+									{{ post.category.name }}
 								</div>
 							{% endif %}
 							{% if post.image %}
@@ -62,7 +59,7 @@
 									{{ post.content | excerpt | nl2br }}
 								</p>
 								<p class="text-muted">
-								{{ post.createdAt | ago }}
+								{{ post.created_at | ago }}
 								</p>
 
 							</div>

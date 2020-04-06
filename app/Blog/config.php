@@ -2,6 +2,7 @@
 
 use App\Blog\BlogWidget;
 use App\Blog\BlogAdminWidget;
+use App\Blog\BlogTwigExtension;
 
 return [
     'blog.prefix' => '/blog',
@@ -10,5 +11,6 @@ return [
     ]),
     'blog.widgets' => \DI\add([
         \DI\get(BlogWidget::class)
-     ])
+     ]),
+     BlogTwigExtension::class => \DI\create()->constructor(\DI\get('blog.widgets')),
 ];

@@ -39,9 +39,9 @@ class BlogModule extends Module
     {
         $renderer = $c->get(RendererInterface::class);
         $renderer->addPath('blog', __DIR__ . '/views');
-        /*if ($renderer instanceof TwigRenderer) {
+        if ($renderer instanceof TwigRenderer) {
             $renderer->getTwig()->addExtension($c->get(BlogTwigExtension::class));
-        }*/
+        }
         $prefix = $c->get('blog.prefix');
         $router = $c->get(Router::class);
         $router->get($prefix, PostIndexAction::class, 'blog.index');

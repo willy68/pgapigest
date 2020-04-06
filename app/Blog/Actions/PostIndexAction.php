@@ -65,14 +65,8 @@ class PostIndexAction
     public function __invoke(Request $request)
     {
         $params = $request->getQueryParams();
-        // $posts = $this->postTable->findPublic()->paginate(12, $params['p'] ?? 1);
         $posts = Posts::paginate(12, $params['p'] ?? 1);
-        // var_dump($posts); die();
-        //$categories = $this->categoryTable->findAll();
         $categories = Categories::find('all');
-
-        // for PHPRenderer
-        // $this->renderer->addGlobal('router', $this->router);
 
         return $this->renderer->render('@blog/index', compact('posts', 'categories'));
     }

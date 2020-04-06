@@ -14,7 +14,7 @@ class Posts extends ActiveRecord\Model
 
     public static $belongs_to = [
         [
-            'categories',
+            'category',
             'class_name' => 'Categories',
             'foreign_key' => 'category_id'
         ]
@@ -33,5 +33,64 @@ class Posts extends ActiveRecord\Model
         return (new Pagerfanta($paginator))
             ->setMaxPerPage($perPage)
             ->setCurrentPage($currentPage);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getThumb(): string
+    {
+        ['filename' => $filename, 'extension' => $extension] = pathinfo($this->image);
+        return '/uploads/posts/' . $filename . '_thumb.' . $extension;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return string
+     */
+    public function getImageUrl(): string
+    {
+        return '/uploads/posts/' . $this->image;
+    }
+
+    public function getCategory()
+    {
+        return $this->category ?: null;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return int
+     */
+    public static function getNbResults(): int
+    {
+        return static::count([
+            'conditions' => ['published = 1', 'created_at < NOW()'],
+            'order' => 'created_at DESC'
+            ]
+        );
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param int $offset
+     * @param int $length
+     * @return mixed
+     */
+    public static function paginatedQuery(int $offset, int $length)
+    {
+        return static::find('all', [
+                'conditions' => ['published = ? AND created_at < NOW()', 1],
+                'order' => 'created_at DESC',
+                'limit' => $length,
+                'offset' => $offset,
+                'include' => ['category']
+            ]
+        );
     }
 }

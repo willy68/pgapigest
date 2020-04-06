@@ -1,10 +1,10 @@
 <?php
 
 use App\Api\ApiModule;
+use App\Blog\BlogModule;
 use App\Demo\DemoModule;
 use App\Admin\AdminModule;
 use App\Api\ApiClientModule;
-use App\Blog\BlogModule;
 use Framework\Middleware\MethodMiddleware;
 use Framework\Middleware\RouterMiddleware;
 use Framework\Middleware\ApiHeadMiddleware;
