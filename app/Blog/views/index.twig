@@ -36,11 +36,13 @@
 		<div class="col-md-9">
 			{% for row in posts | batch(4) %}
 				<div class="card-deck mb-4">
-
+					<pre>
+						{{ dump(row) }}
+					</pre>
 					{% for post in row %}
-					{# <pre>
+					<pre>
 						{{ dump(post) }}
-					</pre> #}
+					</pre>
 						<div class="card">
 							{% if post.categoryName %}
 								<div class="card-header">
