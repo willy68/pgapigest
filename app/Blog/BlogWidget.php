@@ -3,7 +3,7 @@
 namespace App\Blog;
 
 use App\Admin\AdminWidgetInterface;
-use App\Blog\Table\PostTable;
+use App\Blog\Models\Posts;
 use Framework\Renderer\RendererInterface;
 
 class BlogWidget implements AdminWidgetInterface
@@ -16,22 +16,14 @@ class BlogWidget implements AdminWidgetInterface
      */
     private $renderer;
 
-    /**
-     * Undocumented variable
-     *
-     * @var PostTable
-     */
-    private $postTable;
-
-    public function __construct(RendererInterface $renderer, PostTable $postTable)
+    public function __construct(RendererInterface $renderer)
     {
         $this->renderer = $renderer;
-        $this->postTable = $postTable;
     }
 
     public function render(): string
     {
-        $count = $this->postTable->count();
+        $count = Posts::count();
         return $this->renderer->render('@blog/admin/widget', compact('count'));
     }
 

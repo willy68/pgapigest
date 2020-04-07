@@ -19,8 +19,8 @@ return [
     /* Application modules. Place your own on the list */
     'modules' => [
         DemoModule::class,
-        BlogModule::class,
         AdminModule::class,
+        BlogModule::class,
         AuthModule::class,
         ApiModule::class,
         ApiClientModule::class
