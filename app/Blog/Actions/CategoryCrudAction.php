@@ -2,11 +2,13 @@
 
 namespace App\Blog\Actions;
 
+use App\Blog\Models\Categories;
 use Framework\Router;
 use App\Blog\Table\CategoryTable;
 use Framework\Actions\CrudAction;
 use Framework\Session\FlashService;
 use Framework\Renderer\RendererInterface;
+use Framework\Validator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CategoryCrudAction extends CrudAction
@@ -15,6 +17,8 @@ class CategoryCrudAction extends CrudAction
     protected $viewPath = '@blog/admin/categories';
 
     protected $routePrefix = 'blog.admin.category';
+
+    protected $model = Categories::class;
 
     public function __construct(
         RendererInterface $renderer,
@@ -44,7 +48,7 @@ class CategoryCrudAction extends CrudAction
      * @param Request $request
      * @return Validator
      */
-    protected function getValidator(Request $request)
+    protected function getValidator(Request $request): Validator
     {
         return parent::getValidator($request)
             ->required('name', 'slug')

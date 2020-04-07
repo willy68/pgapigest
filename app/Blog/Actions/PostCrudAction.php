@@ -2,14 +2,16 @@
 
 namespace App\Blog\Actions;
 
-use App\Blog\Entity\Post;
-use App\Blog\PostUpload;
-use App\Blog\Table\CategoryTable;
-use App\Blog\Table\PostTable;
-use Framework\Actions\CrudAction;
-use Framework\Renderer\RendererInterface;
 use Framework\Router;
+use App\Blog\PostUpload;
+use Framework\Validator;
+use App\Blog\Entity\Post;
+use App\Blog\Models\Posts;
+use App\Blog\Table\PostTable;
+use App\Blog\Table\CategoryTable;
+use Framework\Actions\CrudAction;
 use Framework\Session\FlashService;
+use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class PostCrudAction extends CrudAction
@@ -18,6 +20,8 @@ class PostCrudAction extends CrudAction
     protected $viewPath = '@blog/admin/posts';
 
     protected $routePrefix = 'blog.admin';
+
+    protected $model = Posts::class;
 
     protected $categoryTable;
 
@@ -100,7 +104,7 @@ class PostCrudAction extends CrudAction
      * @param Request $request
      * @return Validator
      */
-    protected function getValidator(Request $request)
+    protected function getValidator(Request $request): Validator
     {
         $validator = parent::getValidator($request)
             ->required('name', 'slug', 'content', 'created_at', 'category_id')

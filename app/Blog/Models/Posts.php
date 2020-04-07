@@ -73,7 +73,7 @@ class Posts extends ActiveRecord\Model
      */
     public static function getNbResults(): int
     {
-        $options = [];
+        $options = null;
         if (!empty(static::$paginatedQuery['conditions'])) {
             $options['conditions'] = static::$paginatedQuery['conditions'];
         }

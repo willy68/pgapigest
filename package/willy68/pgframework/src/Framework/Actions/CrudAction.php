@@ -2,15 +2,17 @@
 
 namespace Framework\Actions;
 
-use Framework\Actions\RouterAwareAction;
-use Framework\Database\Hydrator;
-use Framework\Database\NoRecordException;
-use Framework\Database\Table;
-use Framework\Renderer\RendererInterface;
 use Framework\Router;
-use Framework\Session\FlashService;
+use ActiveRecord\Model;
 use Framework\Validator;
+use App\Blog\Models\Posts;
+use Framework\Database\Table;
+use Framework\Database\Hydrator;
+use Framework\Session\FlashService;
 use Psr\Http\Message\ResponseInterface;
+use Framework\Actions\RouterAwareAction;
+use Framework\Database\NoRecordException;
+use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CrudAction
@@ -33,6 +35,8 @@ class CrudAction
      * @var Table
      */
     protected $table;
+
+    protected $model = Model::class;
 
     /**
      * Undocumented variable
@@ -105,7 +109,8 @@ class CrudAction
     public function index(Request $request): string
     {
         $params = $request->getQueryParams();
-        $items = $this->table->findAll()->paginate(12, $params['p'] ?? 1);
+        // $items = $this->table->findAll()->paginate(12, $params['p'] ?? 1);
+        $items = $this->model::setPaginatedQuery($this->model::findAll())::paginate(12, $params['p'] ?? 1);
 
         return $this->renderer->render($this->viewPath . '/index', compact('items'));
     }
