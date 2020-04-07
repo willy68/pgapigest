@@ -23,6 +23,8 @@ class Posts extends ActiveRecord\Model
  
     public static $paginatedQuery;
 
+    public static $query;
+
     /**
      * Undocumented function
      *
@@ -71,11 +73,11 @@ class Posts extends ActiveRecord\Model
      */
     public static function getNbResults(): int
     {
-        return static::count([
-            'conditions' => static::$paginatedQuery['conditions'],
-            'order' => static::$paginatedQuery['order']
-            ]
-        );
+        $options = [];
+        if (!empty(static::$paginatedQuery['conditions'])) {
+            $options['conditions'] = static::$paginatedQuery['conditions'];
+        }
+        return static::count($options);
     }
 
     /**
@@ -92,31 +94,66 @@ class Posts extends ActiveRecord\Model
         return static::find('all', static::$paginatedQuery);
     }
 
-    public static function setPaginatedQuery(Query $query)
+    /**
+     * set paginated options conditions
+     *
+     * @param \Framework\Database\Query $query
+     * @return string Class name
+     */
+    public static function setPaginatedQuery(Query $query): string
     {
-        static::$paginatedQuery = [
-            'conditions' => [$query->getWhere()],
-            'order' => $query->getOrder(),
-            'limit' => 12,
-            'offset' => 1,
-            'include' => ['category']
-        ];
+        static::$paginatedQuery = [];
+        if (!empty($where = $query->getWhere())) {
+            static::$paginatedQuery['conditions'] = [$where];
+        }
+        if (!empty($order = $query->getOrder())) {
+            static::$paginatedQuery['order'] = $order;
+        }
+        static::$paginatedQuery['include'] = ['category'];
+        return __CLASS__;
     }
 
-    public static function findPublicForCategory(int $category_id)
+    /**
+     * Init options conditions for all Posts by Categories
+     *
+     * @param int $category_id
+     * @return Query
+     */
+    public static function findPublicForCategory(int $category_id): Query
     {
-        static::setPaginatedQuery((new Query())
-            ->where('published = 1 AND created_at < NOW()')
-            ->where("category_id = $category_id")
-            ->order('created_at DESC')
-        );
+        return static::findPublic()->where("category_id = $category_id");
     }
 
-    public static function findPublic()
+    /**
+     * Init options conditions for all published Posts
+     *
+     * @return Query
+     */
+    public static function findPublic(): Query
     {
-        static::setPaginatedQuery((new Query())
-            ->where('published = 1 AND created_at < NOW()')
-            ->order('created_at DESC')
-        );
+        return static::findAll()->where('published = 1 AND created_at < NOW()');
+    }
+
+    /**
+     * Init options conditions for all Post
+     *
+     * @return Query
+     */
+    public static function findAll(): Query
+    {
+        return static::makeQuery()->order('created_at DESC');
+    }
+
+    /**
+     * Init query
+     *
+     * @return \Framework\Database\Query
+     */
+    public static function makeQuery(): Query
+    {
+        if (!static::$query) {
+            return static::$query = new Query();
+        }
+        return static::$query;
     }
 }

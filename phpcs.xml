@@ -6,11 +6,11 @@
   <arg name="colors"/>
   <arg value="p"/>
 
-  <file>src</file>
+  <file>package</file>
   <file>app</file>
-  <file>bin</file>
 
   <exclude-pattern>app/Api/db/*$</exclude-pattern>
+  <exclude-pattern>app/Blog/db/*$</exclude-pattern>
   <exclude-pattern>*/views/*$</exclude-pattern>
 
   <rule ref="PSR12">

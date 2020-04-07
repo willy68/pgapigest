@@ -46,8 +46,8 @@ class PostIndexAction
     {
         $params = $request->getQueryParams();
         // Init Query
-        Posts::findPublic();
-        $posts = Posts::paginate(12, $params['p'] ?? 1);
+        $posts = Posts::setPaginatedQuery(Posts::findPublic())
+                ::paginate(12, $params['p'] ?? 1);
         $categories = Categories::find('all');
 
         return $this->renderer->render('@blog/index', compact('posts', 'categories'));

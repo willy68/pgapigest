@@ -57,8 +57,8 @@ class CategoryShowAction
         $category = Categories::find_by_slug($request->getAttribute('slug'));
         $params = $request->getQueryParams();
         // Init Query
-        Posts::findPublicForCategory($category->id);
-        $posts = Posts::paginate(12, $params['p'] ?? 1);
+        $posts = Posts::setPaginatedQuery(Posts::findPublicForCategory($category->id))
+                ::paginate(12, $params['p'] ?? 1);
         $categories = Categories::find('all');
         $page = $params['p'] ?? 1;
 
