@@ -8,6 +8,7 @@ use Framework\Validator;
 use App\Blog\Entity\Post;
 use App\Blog\Models\Posts;
 use App\Blog\Table\PostTable;
+use App\Blog\Models\Categories;
 use App\Blog\Table\CategoryTable;
 use Framework\Actions\CrudAction;
 use Framework\Session\FlashService;
@@ -56,7 +57,8 @@ class PostCrudAction extends CrudAction
      */
     protected function formParams(array $params): array
     {
-        $params['categories'] = $this->categoryTable->findList();
+        // $params['categories'] = $this->categoryTable->findList();
+        $params['categories'] = Categories::findList('id, name');
         return $params;
     }
 

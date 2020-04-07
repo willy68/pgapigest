@@ -124,7 +124,8 @@ class CrudAction
      */
     public function edit(Request $request)
     {
-        $item = $this->table->find($request->getAttribute('id'));
+        // $item = $this->table->find($request->getAttribute('id'));
+        $item = $this->model::find($request->getAttribute('id'));
         $errors = false;
         $submited = false;
 
