@@ -125,6 +125,7 @@ class CrudAction
     public function edit(Request $request)
     {
         // $item = $this->table->find($request->getAttribute('id'));
+        /** @var \ActiveRecord\Model */
         $item = $this->model::find($request->getAttribute('id'));
         $errors = false;
         $submited = false;
@@ -132,12 +133,14 @@ class CrudAction
         if ($request->getMethod() === 'POST') {
             $validator = $this->getValidator($request);
             if ($validator->isValid()) {
-                $this->table->update($item->id, $this->getParams($request, $item));
+                $item->update_attributes($this->getParams($request, $item));
+                // $this->table->update($item->id, $this->getParams($request, $item));
                 $this->flash->success($this->messages['edit']);
                 return $this->redirect($this->routePrefix . '.index');
             }
             $submited = true;
-            Hydrator::hydrate($request->getParsedBody(), $item);
+            // Hydrator::hydrate($request->getParsedBody(), $item);
+            $item->set_attributes($this->getParams($request, $item));
             $errors = $validator->getErrors();
         }
 

@@ -18,6 +18,11 @@ class CategoryCrudAction extends CrudAction
 
     protected $routePrefix = 'blog.admin.category';
 
+    /**
+     * Class model
+     *
+     * @var Categories
+     */
     protected $model = Categories::class;
 
     public function __construct(
@@ -54,7 +59,7 @@ class CategoryCrudAction extends CrudAction
             ->required('name', 'slug')
             ->length('name', 2, 250)
             ->length('slug', 2, 250)
-            ->unique('slug', $this->table->getTable(), $this->table->getPdo(), $request->getAttribute('id'))
+            ->unique('slug', $this->model::table_name(), $this->model::connection()->connection, $request->getAttribute('id'))
             ->slug('slug');
     }
 }
