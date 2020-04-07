@@ -3,8 +3,6 @@
 namespace App\Blog\Actions;
 
 use App\Blog\Models\Posts;
-use App\Blog\Table\CategoryTable;
-use App\Blog\Table\PostTable;
 use Framework\Actions\RouterAwareAction;
 use Framework\Renderer\RendererInterface;
 use Framework\Router;
@@ -56,7 +54,6 @@ class PostShowAction
     public function __invoke(Request $request)
     {
         $slug = $request->getAttribute('slug');
-        // $post = $this->postTable->findWithCategory($request->getAttribute('id'));
         $post = Posts::find($request->getAttribute('id'), ['include' => ['category']]);
 
         if ($post->slug !== $slug) {

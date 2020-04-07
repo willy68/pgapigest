@@ -260,6 +260,45 @@ class Query implements \IteratorAggregate
     }
 
     /**
+     * get Where conditions
+     *
+     * @return string
+     */
+    public function getWhere(): string
+    {
+        if (!empty($this->where)) {
+            return "(" . join(') AND (', $this->where) . ")";
+        }
+        return '';
+    }
+
+    /**
+     * get Order conditions
+     *
+     * @return string
+     */
+    public function getOrder(): string
+    {
+        if (!empty($this->order)) {
+            return join(', ', $this->order);
+        }
+        return '';
+    }
+
+    /**
+     * get Limit conditions
+     *
+     * @return string
+     */
+    public function getLimit(): string
+    {
+        if ($this->limit) {
+            return $this->limit;
+        }
+        return '';
+    }
+
+    /**
      * Build FROM string
      *
      * @return string

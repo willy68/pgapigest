@@ -3,8 +3,7 @@
 namespace App\Blog\Actions;
 
 use App\Blog\Models\Categories;
-use App\Blog\Table\CategoryTable;
-use App\Blog\Table\PostTable;
+use App\Blog\Models\Posts;
 use Framework\Actions\RouterAwareAction;
 use Framework\Renderer\RendererInterface;
 use Framework\Router;
@@ -30,20 +29,6 @@ class CategoryShowAction
     /**
      * Undocumented variable
      *
-     * @var PostTable
-     */
-    private $postTable;
-
-    /**
-     * Undocumented variable
-     *
-     * @var CategoryTable
-     */
-    private $categoryTable;
-
-    /**
-     * Undocumented variable
-     *
      * @var \Framework\Router
      */
     private $router;
@@ -55,14 +40,10 @@ class CategoryShowAction
      */
     public function __construct(
         RendererInterface $renderer,
-        Router $router,
-        PostTable $postTable,
-        CategoryTable $categoryTable
+        Router $router
     ) {
         $this->renderer = $renderer;
         $this->router = $router;
-        $this->postTable = $postTable;
-        $this->categoryTable = $categoryTable;
     }
 
     /**
@@ -73,16 +54,13 @@ class CategoryShowAction
      */
     public function __invoke(Request $request)
     {
-        // $category = $this->categoryTable->findBy('slug', $request->getAttribute('slug'));
         $category = Categories::find_by_slug($request->getAttribute('slug'));
         $params = $request->getQueryParams();
-        $posts = $this->postTable->findPublicForCategory($category->id)->paginate(12, $params['p'] ?? 1);
-        // $categories = $this->categoryTable->findAll();
+        // Init Query
+        Posts::findPublicForCategory($category->id);
+        $posts = Posts::paginate(12, $params['p'] ?? 1);
         $categories = Categories::find('all');
         $page = $params['p'] ?? 1;
-
-        // for PHPRenderer
-        // $this->renderer->addGlobal('router', $this->router);
 
         return $this->renderer->render('@blog/index', compact('posts', 'categories', 'category', 'page'));
     }

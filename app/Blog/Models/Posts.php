@@ -4,6 +4,7 @@ namespace App\Blog\Models;
 
 use ActiveRecord;
 use Framework\Database\ActiveRecord\PaginatedActiveRecord;
+use Framework\Database\Query;
 use Pagerfanta\Pagerfanta;
 
 class Posts extends ActiveRecord\Model
@@ -20,6 +21,8 @@ class Posts extends ActiveRecord\Model
         ]
     ];
  
+    public static $paginatedQuery;
+
     /**
      * Undocumented function
      *
@@ -69,8 +72,8 @@ class Posts extends ActiveRecord\Model
     public static function getNbResults(): int
     {
         return static::count([
-            'conditions' => ['published = 1', 'created_at < NOW()'],
-            'order' => 'created_at DESC'
+            'conditions' => static::$paginatedQuery['conditions'],
+            'order' => static::$paginatedQuery['order']
             ]
         );
     }
@@ -84,13 +87,36 @@ class Posts extends ActiveRecord\Model
      */
     public static function paginatedQuery(int $offset, int $length)
     {
-        return static::find('all', [
-                'conditions' => ['published = ? AND created_at < NOW()', 1],
-                'order' => 'created_at DESC',
-                'limit' => $length,
-                'offset' => $offset,
-                'include' => ['category']
-            ]
+        static::$paginatedQuery['limit'] = $length;
+        static::$paginatedQuery['offset'] = $offset;
+        return static::find('all', static::$paginatedQuery);
+    }
+
+    public static function setPaginatedQuery(Query $query)
+    {
+        static::$paginatedQuery = [
+            'conditions' => [$query->getWhere()],
+            'order' => $query->getOrder(),
+            'limit' => 12,
+            'offset' => 1,
+            'include' => ['category']
+        ];
+    }
+
+    public static function findPublicForCategory(int $category_id)
+    {
+        static::setPaginatedQuery((new Query())
+            ->where('published = 1 AND created_at < NOW()')
+            ->where("category_id = $category_id")
+            ->order('created_at DESC')
+        );
+    }
+
+    public static function findPublic()
+    {
+        static::setPaginatedQuery((new Query())
+            ->where('published = 1 AND created_at < NOW()')
+            ->order('created_at DESC')
         );
     }
 }

@@ -45,6 +45,8 @@ class PostIndexAction
     public function __invoke(Request $request)
     {
         $params = $request->getQueryParams();
+        // Init Query
+        Posts::findPublic();
         $posts = Posts::paginate(12, $params['p'] ?? 1);
         $categories = Categories::find('all');
 
