@@ -24,7 +24,7 @@ class BlogModel extends ActiveRecord\Model
      */
     public static function paginate(int $perPage, int $currentPage = 1): Pagerfanta
     {
-        $paginator = new PaginatedActiveRecord(Posts::class);
+        $paginator = new PaginatedActiveRecord(static::class);
         return (new Pagerfanta($paginator))
             ->setMaxPerPage($perPage)
             ->setCurrentPage($currentPage);
@@ -73,8 +73,7 @@ class BlogModel extends ActiveRecord\Model
         if (!empty($order = $query->getOrder())) {
             static::$paginatedQuery['order'] = $order;
         }
-        static::$paginatedQuery['include'] = ['category'];
-        return __CLASS__;
+        return static::class;
     }
 
     /**

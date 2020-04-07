@@ -19,6 +19,25 @@ class Posts extends BlogModel
     ];
 
     /**
+     * set paginated options conditions
+     *
+     * @param \Framework\Database\Query $query
+     * @return string Class name
+     */
+    public static function setPaginatedQuery(Query $query): string
+    {
+        static::$paginatedQuery = [];
+        if (!empty($where = $query->getWhere())) {
+            static::$paginatedQuery['conditions'] = [$where];
+        }
+        if (!empty($order = $query->getOrder())) {
+            static::$paginatedQuery['order'] = $order;
+        }
+        static::$paginatedQuery['include'] = ['category'];
+        return static::class;
+    }
+
+    /**
      * Undocumented function
      *
      * @return string

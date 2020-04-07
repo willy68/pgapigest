@@ -5,7 +5,6 @@ namespace Framework\Actions;
 use Framework\Router;
 use ActiveRecord\Model;
 use Framework\Validator;
-use App\Blog\Models\Posts;
 use Framework\Database\Table;
 use Framework\Database\Hydrator;
 use Framework\Session\FlashService;
@@ -110,7 +109,8 @@ class CrudAction
     {
         $params = $request->getQueryParams();
         // $items = $this->table->findAll()->paginate(12, $params['p'] ?? 1);
-        $items = $this->model::setPaginatedQuery($this->model::findAll())::paginate(12, $params['p'] ?? 1);
+        $items = $this->model::setPaginatedQuery($this->model::findAll())
+                ::paginate(12, $params['p'] ?? 1);
 
         return $this->renderer->render($this->viewPath . '/index', compact('items'));
     }
