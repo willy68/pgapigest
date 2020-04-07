@@ -6,6 +6,7 @@
  *
  * @return bool
  */
+
 return function () {
     $files = [
       __DIR__ . '/../../../autoload.php', // composer dependency

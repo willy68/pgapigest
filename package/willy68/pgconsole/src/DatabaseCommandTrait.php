@@ -47,7 +47,7 @@ trait DatabaseCommandTrait
     }
 
     /**
-     * 
+     *
      *
      * @param string $db
      * @param string $table
@@ -65,7 +65,7 @@ trait DatabaseCommandTrait
     }
 
     /**
-     * 
+     *
      *
      * @param string $db
      * @param string $table
@@ -115,7 +115,7 @@ trait DatabaseCommandTrait
     }
 
     /**
-     * 
+     *
      *
      * @param \Psr\Container\ContainerInterface $c
      * @return \PDO

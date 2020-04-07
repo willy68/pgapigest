@@ -45,7 +45,7 @@ class App implements RequestHandlerInterface
      */
     public function __construct(array $config)
     {
-        $this->config[] = dirname(__DIR__ ) . '/config/config.php';
+        $this->config[] = dirname(__DIR__) . '/config/config.php';
         $this->config = \array_merge($this->config, $config);
     }
 
@@ -67,13 +67,13 @@ class App implements RequestHandlerInterface
          * @param array $modules
          * @return self
          */
-        public function addModules(array $modules): self
-        {
-            foreach ($modules as $module) {
-                $this->addModule($module);
-            }
-            return $this;
+    public function addModules(array $modules): self
+    {
+        foreach ($modules as $module) {
+            $this->addModule($module);
         }
+        return $this;
+    }
 
     /**
      * Undocumented function

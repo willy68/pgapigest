@@ -24,6 +24,7 @@ use Framework\ActiveRecord\ActiveRecordFactory;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuupola\Middleware\JwtAuthentication;
+
 use function DI\create;
 use function DI\get;
 use function DI\factory;
@@ -63,7 +64,7 @@ return [
             ]
         );
     },
-    ServerRequestInterface::class => function(ContainerInterface $c) {
+    ServerRequestInterface::class => function (ContainerInterface $c) {
         return ServerRequest::fromGlobals();
     }
 
