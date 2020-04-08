@@ -43,6 +43,7 @@ Thumbs.db
 /config/database.php
 database.php
 *~
+/public/uploads
 /generated_models
 /generated_routes
 /generated_controllers
