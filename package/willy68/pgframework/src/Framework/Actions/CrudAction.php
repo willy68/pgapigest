@@ -35,6 +35,11 @@ class CrudAction
      */
     protected $table;
 
+    /**
+     * Model class
+     *
+     * @var string
+     */
     protected $model = Model::class;
 
     /**
@@ -158,18 +163,22 @@ class CrudAction
      */
     public function create(Request $request)
     {
-        $item = $this->getNewEntity();
+        // $item = $this->getNewEntity();
+        /** @var \ActiveRecord\Model */
+        $item = new $this->model();
         $errors = false;
         $submited = false;
         if ($request->getMethod() === 'POST') {
             $validator = $this->getValidator($request);
             if ($validator->isValid()) {
-                $this->table->insert($this->getParams($request, $item));
+                // $this->table->insert($this->getParams($request, $item));
+                $item->create($this->getParams($request, $item));
                 $this->flash->success($this->messages['create']);
                 return $this->redirect($this->routePrefix . '.index');
             }
             $submited = true;
-            Hydrator::hydrate($request->getParsedBody(), $item);
+            // Hydrator::hydrate($request->getParsedBody(), $item);
+            $item->set_attributes($this->getParams($request, $item));
             $errors = $validator->getErrors();
         }
 
