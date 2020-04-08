@@ -37,10 +37,11 @@ class CategoryCrudAction extends CrudAction
     /**
      * Undocumented function
      *
-     * @param Request $request
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param mixed|null $item
      * @return array
      */
-    protected function getParams(Request $request, $item): array
+    protected function getParams(Request $request, $item = null): array
     {
         return array_filter($request->getParsedBody(), function ($key) {
             return in_array($key, ['name', 'slug']);

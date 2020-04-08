@@ -195,10 +195,10 @@ class CrudAction
      * Récupère les paramètres POST
      *
      * @param Request $request
-     * @param mixed $item
+     * @param mixed|null $item
      * @return array
      */
-    protected function getParams(Request $request, $item): array
+    protected function getParams(Request $request, $item = null): array
     {
         return array_filter($request->getParsedBody(), function ($key) {
             return in_array($key, []);

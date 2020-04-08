@@ -18,6 +18,9 @@
   </div>
   <div class="col-md-4">
     {{ field('image', item.slug, "Image", {type: 'file'}) }}
+    {% if item.image %}
+    {{ field('delete', "0", "Supprimer l'image", {type: 'checkbox'}) }}
+    {% endif %}
   </div>
   <div class="col-md-4">
     {{ field('slug', item.slug, "Lien") }}

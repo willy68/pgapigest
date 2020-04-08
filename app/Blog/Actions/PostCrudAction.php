@@ -78,18 +78,24 @@ class PostCrudAction extends CrudAction
      * Undocumented function
      *
      * @param Request $request
-     * @param mixed $item
+     * @param mixed|null $item
      * @return array
      */
-    protected function getParams(Request $request, $item): array
+    protected function getParams(Request $request, $item = null): array
     {
         $params = array_merge($request->getParsedBody(), $request->getUploadedFiles());
-        // Upload du fichier
-        $image = $this->postUpload->upload($params['image'], $item->image);
-        if ($image) {
-            $params['image'] = $image;
-        } else {
-            unset($params['image']);
+        if (isset($params['delete']) && $params['delete'] == 1) {
+            $this->postUpload->delete($item->image);
+            $params['image'] = "";
+        }
+        elseif ($item) {
+            // Upload du fichier
+            $image = $this->postUpload->upload($params['image'], $item->image);
+            if ($image) {
+                $params['image'] = $image;
+            } else {
+                unset($params['image']);
+            }
         }
          
         $params = array_filter($params, function ($key) {
