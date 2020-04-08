@@ -43,10 +43,11 @@ class PostCrudAction extends CrudAction
 
     public function delete(Request $request)
     {
-        $post = $this->table->find($request->getAttribute('id'));
+        // $post = $this->table->find($request->getAttribute('id'));
+        $post = $this->model::find($request->getAttribute('id'));
         $this->postUpload->delete($post->image);
-        
-        return parent::delete($request);
+        $post->delete($request->getAttribute('id'));
+        return $this->redirect($this->routePrefix . '.index');
     }
 
     /**

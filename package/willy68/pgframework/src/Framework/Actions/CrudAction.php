@@ -145,7 +145,9 @@ class CrudAction
             }
             $submited = true;
             // Hydrator::hydrate($request->getParsedBody(), $item);
-            $item->set_attributes($this->getParams($request, $item));
+            $item->set_attributes(
+                $this->getFilteredParams($request, $item->attributes(), true)
+            );
             $errors = $validator->getErrors();
         }
 
@@ -178,7 +180,9 @@ class CrudAction
             }
             $submited = true;
             // Hydrator::hydrate($request->getParsedBody(), $item);
-            $item->set_attributes($this->getParams($request, $item));
+            $item->set_attributes(
+                $this->getFilteredParams($request, $item->attributes(), true)
+            );
             $errors = $validator->getErrors();
         }
 
@@ -196,7 +200,10 @@ class CrudAction
      */
     public function delete(Request $request)
     {
-        $this->table->delete($request->getAttribute('id'));
+        /** @var \ActiveRecord\Model */
+        $item = $this->model::find($request->getAttribute('id'));
+        // $this->table->delete($request->getAttribute('id'));
+        $item->delete($request->getAttribute('id'));
         return $this->redirect($this->routePrefix . '.index');
     }
 
@@ -211,6 +218,24 @@ class CrudAction
     {
         return array_filter($request->getParsedBody(), function ($key) {
             return in_array($key, []);
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
+    /**
+     * get filtered Post params
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param array $filter
+     * @param bool $useKey
+     * @return array
+     */
+    protected function getFilteredParams(Request $request, array $filter, bool $useKey = false): array
+    {
+        if ($useKey) {
+            $filter = array_keys($filter);
+        }
+        return array_filter($request->getParsedBody(), function ($key) use ($filter) {
+            return in_array($key, $filter);
         }, ARRAY_FILTER_USE_KEY);
     }
 
