@@ -25,11 +25,6 @@ class DatabaseAuth implements Auth
      */
     private $user;
 
-    /**
-     * Undocumented function
-     *
-     * @param UserTable $userTable
-     */
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
@@ -50,7 +45,6 @@ class DatabaseAuth implements Auth
 
         /* @var \App\Auth\User $user */
         // $user = $this->userTable->findBy('username', $username);
-        /** @var \App\Auth\Models\User $user */
         $user = User::find_by_username($username);
         if ($user && password_verify($password, $user->password)) {
             $this->session->set('auth.user', $user->id);

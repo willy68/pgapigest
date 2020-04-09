@@ -2,9 +2,10 @@
 
 namespace App\Auth\Models;
 
-use Framework\Auth\Models\User as AuthUser;
+use ActiveRecord\Model;
+use Framework\Auth\User as AuthUser;
 
-class User extends AuthUser
+class User extends Model implements  AuthUser
 {
     public static $connection = 'blog';
 
