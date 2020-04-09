@@ -2,9 +2,9 @@
 
 namespace App\Auth;
 
+use ActiveRecord\RecordNotFound;
 use App\Auth\Models\User;
 use Framework\Auth;
-use Framework\Database\NoRecordException;
 use Framework\Session\SessionInterface;
 
 class DatabaseAuth implements Auth
@@ -79,7 +79,7 @@ class DatabaseAuth implements Auth
                 // $this->user = $this->userTable->find((int) $userId);
                 $this->user = User::find((int) $userId);
                 return $this->user;
-            } catch (NoRecordException $e) {
+            } catch (RecordNotFound $e) {
                 $this->session->delete('auth.user');
                 return null;
             }
