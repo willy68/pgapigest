@@ -4,12 +4,10 @@ namespace App\Blog;
 
 use Framework\Module;
 use Framework\Router;
-use App\Blog\Actions\PostCrudAction;
 use App\Blog\Actions\PostShowAction;
 use Framework\Renderer\TwigRenderer;
 use App\Blog\Actions\PostIndexAction;
 use Psr\Container\ContainerInterface;
-use App\Blog\Actions\CategoryCrudAction;
 use App\Blog\Actions\CategoryShowAction;
 use Framework\Renderer\RendererInterface;
 
@@ -43,15 +41,10 @@ class BlogModule extends Module
             $renderer->getTwig()->addExtension($c->get(BlogTwigExtension::class));
         }
         $prefix = $c->get('blog.prefix');
+        /** @var \Framework\Router */
         $router = $c->get(Router::class);
         $router->get($prefix, PostIndexAction::class, 'blog.index');
         $router->get($prefix . '/{slug:[a-z\-0-9]+}-{id:[0-9]+}', PostShowAction::class, 'blog.show');
         $router->get($prefix . '/category/{slug:[a-z\-0-9]+}', CategoryShowAction::class, 'blog.category');
-
-        if ($c->has('admin.prefix')) {
-            $prefix = $c->get('admin.prefix');
-            $router->crud("$prefix/posts", PostCrudAction::class, 'blog.admin');
-            $router->crud("$prefix/categories", CategoryCrudAction::class, 'blog.admin.category');
-        }
     }
 }
