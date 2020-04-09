@@ -2,21 +2,14 @@
 
 namespace App\Auth;
 
+use App\Auth\Models\User;
 use Framework\Auth;
-use Framework\Auth\User;
 use App\Auth\Table\UserTable;
 use Framework\Database\NoRecordException;
 use Framework\Session\SessionInterface;
 
 class DatabaseAuth implements Auth
 {
-
-    /**
-     * Undocumented variable
-     *
-     * @var UserTable
-     */
-    private $userTable;
 
     /**
      * Undocumented variable
@@ -28,7 +21,7 @@ class DatabaseAuth implements Auth
     /**
      * Undocumented variable
      *
-     * @var \App\Auth\User
+     * @var \App\Auth\Models\User
      */
     private $user;
 
@@ -37,9 +30,8 @@ class DatabaseAuth implements Auth
      *
      * @param UserTable $userTable
      */
-    public function __construct(UserTable $userTable, SessionInterface $session)
+    public function __construct(SessionInterface $session)
     {
-        $this->userTable = $userTable;
         $this->session = $session;
     }
 
@@ -56,8 +48,10 @@ class DatabaseAuth implements Auth
             return null;
         }
 
-        /** @var \App\Auth\User $user */
-        $user = $this->userTable->findBy('username', $username);
+        /* @var \App\Auth\User $user */
+        // $user = $this->userTable->findBy('username', $username);
+        /** @var \App\Auth\Models\User $user */
+        $user = User::find_by_username($username);
         if ($user && password_verify($password, $user->password)) {
             $this->session->set('auth.user', $user->id);
             return $user;
@@ -89,7 +83,8 @@ class DatabaseAuth implements Auth
                 return $this->user;
             }
             try {
-                $this->user = $this->userTable->find((int) $userId);
+                // $this->user = $this->userTable->find((int) $userId);
+                $this->user = User::find((int) $userId);
                 return $this->user;
             } catch (NoRecordException $e) {
                 $this->session->delete('auth.user');

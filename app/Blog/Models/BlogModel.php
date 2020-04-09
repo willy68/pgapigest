@@ -3,7 +3,6 @@
 namespace App\Blog\Models;
 
 use ActiveRecord;
-use App\Blog\Models\Posts;
 use Pagerfanta\Pagerfanta;
 use Framework\Database\Query;
 use Framework\Database\ActiveRecord\PaginatedActiveRecord;
