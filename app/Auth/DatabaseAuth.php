@@ -4,7 +4,6 @@ namespace App\Auth;
 
 use App\Auth\Models\User;
 use Framework\Auth;
-use App\Auth\Table\UserTable;
 use Framework\Database\NoRecordException;
 use Framework\Session\SessionInterface;
 
