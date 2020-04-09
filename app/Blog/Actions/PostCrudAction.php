@@ -88,8 +88,7 @@ class PostCrudAction extends CrudAction
         if (isset($params['delete']) && $params['delete'] == 1) {
             $this->postUpload->delete($item->image);
             $params['image'] = "";
-        }
-        elseif ($item) {
+        } elseif ($item) {
             // Upload du fichier
             $image = $this->postUpload->upload($params['image'], $item->image);
             if ($image) {

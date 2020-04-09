@@ -37,8 +37,7 @@ class BlogModule extends Module
         Router $router,
         BlogTwigExtension $blogTwigExtension,
         string $prefix
-    )
-    {
+    ) {
         $renderer->addPath('blog', __DIR__ . '/views');
         if ($renderer instanceof TwigRenderer) {
             $renderer->getTwig()->addExtension($blogTwigExtension);

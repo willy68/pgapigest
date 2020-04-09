@@ -130,7 +130,7 @@ class Router
     {
         return $this->group(
             $prefixPath,
-            function(RouteGroup $route) use ($callable, $prefixName){
+            function (RouteGroup $route) use ($callable, $prefixName) {
                 $route->crud($callable, $prefixName);
             }
         );
