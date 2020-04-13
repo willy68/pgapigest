@@ -2,7 +2,7 @@
 
 namespace Framework;
 
-use Framework\Database\Table;
+use Framework\Validator\Validation\ValidationRules;
 use Framework\Validator\ValidationError;
 use PDO;
 
@@ -28,6 +28,13 @@ class Validator
      * @var ValidationError[]
      */
     private $errors = [];
+
+    /**
+     * ValidationRule
+     *
+     * @var ValidationRules[]
+     */
+    private $validations = [];
 
     /**
      * Validator constructor.
@@ -239,6 +246,36 @@ class Validator
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    /**
+     * Add rules to validator
+     * 
+     *      $key            $value
+     * 
+     * 'fieldName' => 'rule1|rule2:50|filter:trim'
+     * 
+     * ex addRules([
+     * 
+     *      'auteur' => 'required|max:50|min:3|filter:trim',
+     * 
+	 *      'email' => 'required|email|filter:trim',
+     * 
+	 *      'emailConfirm' => 'required|emailConfirm:email|filter:trim'
+     * 
+     * ]);
+     *
+     * @param array $rules
+     * @return self
+     */
+    public function addRules(array $rules): self
+    {
+        if (!empty($rules)) {
+            foreach($rules as $key => $value) {
+                $this->validations[] = new ValidationRules($key, $value);
+            }
+        }
+        return $this;
     }
 
     /**

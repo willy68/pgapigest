@@ -10,7 +10,7 @@ class MinValidation implements ValidationInterface
 
 	protected $min;
 
-	protected string $error = 'Le champ %1$s doit avoir minimum %2$d caractères';
+	protected string $error = 'Le champ %s doit avoir minimum %d caractères';
 
 	public function __construct($min = 1, string $error = null)
 	{
@@ -20,7 +20,13 @@ class MinValidation implements ValidationInterface
 		}
 	}
 
-	public function parseParam($param)
+	/**
+	 * 
+	 *
+	 * @param [type] $param
+	 * @return self
+	 */
+	public function parseParam($param): self
 	{
 		if (is_string($param)) {
 			list($min, $message) = array_pad(explode(',', $param), 2, '');
@@ -32,12 +38,12 @@ class MinValidation implements ValidationInterface
 		return $this;
 	}
 
-	public function getParamAsArray()
+	public function getParams(): array
 	{
 		return [$this->min];
 	}
 
-	public function isValid($var)
+	public function isValid($var): bool
 	{
 		if (is_numeric($var))
 			return $this->checkNumeric($var);
@@ -47,6 +53,11 @@ class MinValidation implements ValidationInterface
 			return $this->checkInt($var);
 		else if (is_float($var))
 			return $this->checkFloat($var);
+	}
+
+	public function getError(): string
+	{
+		return $this->error;
 	}
 
 	protected function checkString($var)

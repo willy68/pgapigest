@@ -1,5 +1,9 @@
 <?php
-namespace Framework\Validator;
+
+namespace Framework\Validator\Validation;
+
+use Framework\Validator\ValidationError;
+use Framework\Validator\ValidationInterface;
 
 /*									 
 [
@@ -12,27 +16,47 @@ namespace Framework\Validator;
 class ValidationRules
 {
 
-	/*
-	* @the error message
-	*/
-	protected $errormsg = array();
+	/**
+	 * 
+	 *
+	 * @var ValidationError[]
+	 */
+	protected $errors = [];
 
-	protected $validationRules = array();
-	
-	protected $filterRules = array();
-	
+	/**
+	 * 
+	 *
+	 * @var ValidationInterface[]
+	 */
+	protected $validationRules = [];
+
+	/**
+	 * Filter rules
+	 *
+	 * @var array
+	 */
+	protected $filterRules = [];
+
+	/**
+	 * FieldName
+	 *
+	 * @var string
+	 */
 	protected $fieldName = '';
 
-	public function __construct($rules = null, $fieldName = null)
+	public function __construct(string $fieldName, string $rules)
 	{
-		if ( $rules !== null)
-			$this->setRules($rules);
-
-		if ($fieldName !== null)
-			$this->setFieldName($fieldName);
+		$this->setFieldName($fieldName);
+		$this->setRules($rules);
 	}
-	
-	public function setFieldName($fieldName)
+
+	/**
+	 * Set fieldName
+	 *
+	 * @param string $fieldName
+	 * @return self
+	 */
+	public function setFieldName(string $fieldName): self
 	{
 		if (is_string($fieldName) && !empty($fieldName)) {
 			$this->fieldName = $fieldName;
@@ -40,7 +64,13 @@ class ValidationRules
 		return $this;
 	}
 
-	public function setRules($rules)
+	/**
+	 * Parse string rules
+	 *
+	 * @param string $rules
+	 * @return self
+	 */
+	public function setRules(string $rules): self
 	{
 		if (!is_string($rules) || empty($rules))
 		{
@@ -51,7 +81,7 @@ class ValidationRules
 		
 		foreach ($options as $option) {
 			$rule = explode(':', $option);
-			$className = null;
+			$className = '';
 			$filter = false;
 			foreach ($rule as $key => $value) {
 				//If $key is 0 $value is the class name validation with no param
@@ -80,71 +110,85 @@ class ValidationRules
 		}
 		return $this;
 	}
-	
-	public function clean()
+
+	/**
+	 * Clean object
+	 *
+	 * @return self
+	 */
+	public function clean(): self
 	{
 		$this->fieldName = '';
-		$this->validationRules = array();
-		$this->filterRules = array();
-		$this->errormsg = array();
+		$this->validationRules = [];
+		$this->filterRules = [];
+		$this->errormsg = [];
 		return $this;
 	}
 
-	public function isValid($var)
+	/**
+	 * 
+	 *
+	 * @param mixed $var
+	 * @return bool
+	 */
+	public function isValid($var): bool
 	{
 		$valid = true;
 
-		foreach ($this->filterRules as $key =>$param) {
-			$className = '\\Library\\Validator\\Filters\\'.$key;
+		foreach ($this->filterRules as $key => $param) {
+			$className = '\\Framework\\Validator\\Filter\\'.$key;
 			$className = new $className();
 			$var = $className->filter($var);
 		}
 
 		foreach ($this->validationRules as $key => $param)
 		{
-			$className = '\\Library\\Validator\\Validations\\'. $key;
+			$className = '\\Framework\\Validator\\Validation\\'. $key;
+			/** @var ValidationInterface $validation*/
 			$validation = new $className();
+
 			if (!empty($param))
 			{
-				$validation->parseParam($param);
+				$validation->parseParam((string) $param);
 			}
-			if ($validation->isValid($var) === false) {
+			if (!$validation->isValid($var)) {
 				$valid = false;
-				$this->setErrorMsg($validation->getErrorMessage($this->fieldName, $var));
+				$this->addError(
+					$this->fieldName,
+					strtolower($key),
+					$validation->getParams(),
+					$validation->getError()
+				);
 			}
 		}	
 		return $valid;
 	}
 
-	public function getErrorMsg($asArray = false)
-	{
-		if (!$asArray)
-		{
-			$error = '';
-			$i = 0;
-			foreach ($this->errormsg as $msg)
-			{
-				$error .= ($i > 0)? "\n\t".$msg : ''.$msg;
-				$i++;
-			}
-			return $error;
+    /**
+     * Undocumented function
+     *
+     * @return ValidationError[]
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $key
+     * @param string $rule
+     * @param array $attributes
+     * @return self
+     */
+    private function addError(string $key, string $rule, array $attributes = [], string $message = ''): self
+    {
+		$error = new ValidationError($key, $rule, $attributes);
+		if (!empty($message)) {
+			$error->addErrorMsg($rule, $message);
 		}
-		else
-		return $this->errormsg;
-	}
-	
-	public function getFirstError()
-	{
-		if (!empty($this->errormsg))
-			return $this->errormsg[0];
-		return '';
-	}
-	
-	public function setErrorMsg($errormsg)
-	{
-		if(is_string($errormsg))
-			$this->errormsg[] = $errormsg;
-		
+		$this->errors[$key] = $error;
 		return $this;
-	}
+    }
 }
