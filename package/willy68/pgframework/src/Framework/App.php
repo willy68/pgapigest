@@ -39,6 +39,13 @@ class App implements RequestHandlerInterface
     private $modules = [];
 
     /**
+     * Self static
+     *
+     * @var App
+     */
+    private $app = null;
+
+    /**
      * App constructor
      *
      * @param array $config
@@ -47,6 +54,17 @@ class App implements RequestHandlerInterface
     {
         $this->config[] = dirname(__DIR__) . '/config/config.php';
         $this->config = \array_merge($this->config, $config);
+        self::$app = $this;
+    }
+
+    /**
+     * Get Self instance
+     *
+     * @return App|null
+     */
+    public static function getApp(): ?App
+    {
+        return self::$app;
     }
 
     /**

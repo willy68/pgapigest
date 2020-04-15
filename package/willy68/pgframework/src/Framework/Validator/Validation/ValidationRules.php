@@ -172,7 +172,12 @@ class ValidationRules
     public function getErrors(): array
     {
         return $this->errors;
-    }
+	}
+	
+	public function getFieldName(): string
+	{
+		return $this->fieldName;
+	}
 
     /**
      * Undocumented function
