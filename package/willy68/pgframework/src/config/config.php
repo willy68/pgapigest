@@ -21,6 +21,7 @@ use Framework\Session\SessionInterface;
 use Framework\Renderer\RendererInterface;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\ActiveRecord\ActiveRecordFactory;
+use Framework\Validator\Filter\TrimFilter;
 use Framework\Validator\Validation\MaxValidation;
 use Framework\Validator\Validation\MinValidation;
 use Framework\Validator\Validation\RequiredValidation;
@@ -47,9 +48,12 @@ return [
         get(CsrfExtension::class),
     ],
     'form.validations' => \DI\add([
-        'required' => get(RequiredValidation::class),
-        'min' => get(MinValidation::class),
-        'max' => get(MaxValidation::class)
+        'required' => RequiredValidation::class,
+        'min' => MinValidation::class,
+        'max' => MaxValidation::class
+    ]),
+    'form.filters' => \DI\add([
+        'trim' => TrimFilter::class
     ]),
     SessionInterface::class => create(PHPSession::class),
     CsrfMiddleware::class =>

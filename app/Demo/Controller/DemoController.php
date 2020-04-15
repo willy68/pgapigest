@@ -28,8 +28,8 @@ class DemoController
         RendererInterface $renderer,
         \PDO $pdo
     ): string {
-        $validation = new ValidationRules('auteur', 'required|min:3|max:10');
-        $validation->isValid('');
+        $validation = new ValidationRules('auteur', 'required|min:3|max:10|filter:trim');
+        $validation->isValid('Willy ');
         /** @var \User $user */
         $user = User::find_by_email(['email' => 'william.lety@gmail.com']);
         $user_array = $user->to_array();

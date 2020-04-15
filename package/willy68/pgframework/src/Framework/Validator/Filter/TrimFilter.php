@@ -1,30 +1,22 @@
 <?php
-	namespace Library\Validator\Filters;
-  /*** class TrimFilter ***/
-  
-class TrimFilter extends AbstractFilter
+
+namespace Framework\Validator\Filter;
+
+use Framework\Validator\FilterInterface;
+
+class TrimFilter implements FilterInterface
 {
-
     /**
+     * return $var after filter if is set or just $var without filter
      *
-     * @the constructor
-     *
+     * @param mixed $var
+     * @return void
      */
-    public function __construct()
-    {
-    }
-
-	/**
-	 *
-	 * filter $var method
-	 * return $var after filter if is set or just $var without filter
-	 */
     public function filter($var)
     {
-    	if($this->is_set($var)) {
+    	if(!empty($var)) {
     		return trim($var);
     	}
     	else return $var;
     }
-
 }

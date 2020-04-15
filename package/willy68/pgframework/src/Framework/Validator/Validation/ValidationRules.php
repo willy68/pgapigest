@@ -3,17 +3,17 @@
 namespace Framework\Validator\Validation;
 
 use Framework\App;
+use Framework\Validator\FilterInterface;
 use Framework\Validator\ValidationError;
 use Framework\Validator\ValidationInterface;
 
-/*									 
-[
-	'auteur' => 'required|max:50|min:3|filter:trim',
-	'email' => 'required|email|filter:trim',
-	'emailConfirm' => 'required|emailConfirm:email|filter:trim'
-]
-*/
-
+/**
+ * new ValidationRules( 'auteur', 'required|max:50|min:3|filter:trim');
+ * 
+ * Valide un champs de formulaire avec plusieurs règles
+ * 
+ * Dépend de App et ContainerInterface
+ */
 class ValidationRules
 {
 
@@ -115,28 +115,31 @@ class ValidationRules
 	public function isValid($var): bool
 	{
 		$valid = true;
-		$formValidations = App::getApp()->getContainer()->get('form.validations');
+		$container = App::getApp()->getContainer();
+		$validations = $container->get('form.validations');
+		$filters = $container->get('form.filters');
 
 		foreach ($this->filterRules as $key => $param) {
-			$className = '\\Framework\\Validator\\Filter\\'.$key;
-			$className = new $className();
-			$var = $className->filter($var);
-		}
-
-		foreach ($this->validationRules as $key => $param)
-		{
-			if (array_key_exists($key, $formValidations)) {
-				/** @var ValidationInterface $validation*/
-				$validation = $formValidations[$key];
+			if (array_key_exists($key, $filters)) {
+				/** @var FilterInterface $filter*/
+				$filter = $container->get($filters[$key]);
 			}
 			else {
 				continue;
 			}
+			$var = $filter->filter($var);
+		}
 
-			if (!empty($param))
-			{
-				$validation->parseParams((string) $param);
+		foreach ($this->validationRules as $key => $param)
+		{
+			if (array_key_exists($key, $validations)) {
+				/** @var ValidationInterface $validation*/
+				$validation = $container->get($validations[$key]);
 			}
+			else {
+				continue;
+			}
+			$validation->parseParams((string) $param);
 			if (!$validation->isValid($var)) {
 				$valid = false;
 				$this->addError(
