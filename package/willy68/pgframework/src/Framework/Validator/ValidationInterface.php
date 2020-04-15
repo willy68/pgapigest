@@ -26,7 +26,7 @@ interface ValidationInterface
      * @param string $param
      * @return self
      */
-    public function parseParam(string $param): self;
+    public function parseParams(string $param): self;
 
     /**
      * get param as array

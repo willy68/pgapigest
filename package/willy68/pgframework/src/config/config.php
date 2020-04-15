@@ -21,6 +21,7 @@ use Framework\Session\SessionInterface;
 use Framework\Renderer\RendererInterface;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\ActiveRecord\ActiveRecordFactory;
+use Framework\Validator\Validation\MinValidation;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuupola\Middleware\JwtAuthentication;
@@ -43,6 +44,9 @@ return [
         get(FormExtension::class),
         get(CsrfExtension::class),
     ],
+    'form.validations' => \DI\add([
+        'min' => get(MinValidation::class)
+    ]),
     SessionInterface::class => create(PHPSession::class),
     CsrfMiddleware::class =>
     create()->constructor(get(SessionInterface::class)),

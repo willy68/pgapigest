@@ -1,22 +1,23 @@
 <?php
-	namespace Library\Validator\Validations;
-  /*** class ConfirmEmailValidation ***/
+
+namespace Framework\Validator\Validation;
+
+use Framework\Validator\ValidationInterface;
   
-class EmailConfirmValidation extends EmailValidation
+class EmailConfirmValidation implements ValidationInterface
 {
+	protected $error;
 
 	protected $fieldName;
+
 	protected $form;
 
-    public function __construct($errormsg=null, $fieldName=null, $form=null)
+    public function __construct($fieldName = null, $errormsg = null)
     {
 		if ($errormsg === null) {
-			$errormsg = 'Le champ %1$s doit être un E-mail identique avec le champ %2$s';
+			$this->error = 'Le champ %1$s doit être un E-mail identique avec le champ %2$s';
 		}
-    	parent::__construct($errormsg);
     	$this->setFieldName($fieldName);
-    	if ($form !== null)
-    		$this->setForm($form);
     }
 	
     public function isValid($var)
@@ -29,36 +30,39 @@ class EmailConfirmValidation extends EmailValidation
     	}
     }
 
-	public function parseParam($param) {
+	public function parseParams($param) {
 		if (is_string($param)) {
 			list($fieldName, $message) = array_pad(explode(',', $param), 2, '');
 			if (!empty($message))
-				$this->setErrorMsg($message);
+				$this->error = $message;
 			if (!empty($fieldName))
 				$this->setFieldName($fieldName);
 		}
 		return $this;
 	}
 
-	public function getParamAsArray()
+	public function getParams()
 	{
 		return [$this->fieldName];
+	}
+
+	/**
+	 * 
+	 *
+	 * @return string
+	 */
+	public function getError(): string
+	{
+		return $this->error;
 	}
 
     protected function checkField($var)
     {
     	if (is_string($var))
     	{
-    		if (!empty($this->form)) {
-				if (($field = $this->form->getField($this->fieldName)) !== null)
-				{
-					return $field->value() == $var;
-				}
-			}
-			elseif (isset($_POST[$this->fieldName])) {
+			if (isset($_POST[$this->fieldName])) {
 				return $_POST[$this->fieldName] === $var;
 			}
-
         }
         return false;
     }
@@ -67,14 +71,6 @@ class EmailConfirmValidation extends EmailValidation
 	{
 		if (is_string($fieldName))
 			$this->fieldName = $fieldName;
-	}
-	
-	public function setForm(\Library\Form\Form $form)
-	{
-		if ($form instanceof \Library\Form\Form)
-		{
-			$this->form = $form;
-		}
 	}
     
 }

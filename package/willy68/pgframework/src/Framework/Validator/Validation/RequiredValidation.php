@@ -1,43 +1,63 @@
 <?php
-	namespace Library\Validator\Validations;
-  /*** class RequiredValidation ***/
-  
-class RequiredValidation extends AbstractValidation
-{
 
-    public function __construct($errormsg =  'Le champ %1$s est obligatoire')
+namespace Framework\Validator\Validation;
+
+use Framework\Validator\ValidationInterface;
+
+class RequiredValidation implements ValidationInterface
+{
+    protected $error;
+
+    public function __construct($error =  'Le champ %s est obligatoire')
     {
-    	parent::__construct($errormsg);
+        $this->error = $error;
     }
-    
+
     public function isValid($var)
     {
-    	return $this->is_set($var);
+        return $this->is_set($var);
     }
-    
+
+	public function parseParams($param) {
+		return $this;
+	}
+
+	public function getParams()
+	{
+		return [];
+	}
+
+	/**
+	 * 
+	 *
+	 * @return string
+	 */
+	public function getError(): string
+	{
+		return $this->error;
+	}
+
     /**
      *
-     * @Check if POST variable is set
+     * @check if POST variable is set
      *
-     * @access private
+     * @access protected
      *
      * @param string $var The POST variable to check
-     *
+     * @return bool
      */
     protected function is_set($var)
     {
-		$check = true;
-        if(!isset($var))
-			$check = false;
-		else if(is_array($var))
-			$check = !empty($var);
-        else if(is_string($var)) // une chaine constituée que d'espaces est considérée comme vide!
-        	$check = (bool) strlen(trim($var));
+        $check = true;
+        if (!isset($var))
+            $check = false;
+        else if (is_array($var))
+            $check = !empty($var);
+        else if (is_string($var)) // une chaine constituée que d'espaces est considérée comme vide!
+            $check = (bool) strlen(trim($var));
         else
-        	$check = !empty($var); // autre type de variable
-        	
-        return $check;
-    }    
-    
+            $check = !empty($var); // autre type de variable
 
+        return $check;
+    }
 }

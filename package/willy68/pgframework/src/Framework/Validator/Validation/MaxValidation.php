@@ -1,19 +1,22 @@
 <?php
-	namespace Library\Validator\Validations;
-  /*** class MaxValidation ***/
+
+namespace Framework\Validator\Validation;
+
+use Framework\Validator\ValidationInterface;
   
-class MaxValidation extends AbstractValidation
+class MaxValidation implements ValidationInterface
 {
 
 	protected $max;
 
-    public function __construct($errormsg=null, $max=255)
+	protected $error;
+
+    public function __construct($max=255, $error = null)
     {
-		if ($errormsg === null) {
-			$errormsg = 'Le champ %1$s doit avoir maximum %2$d caractères';
-		}
-    	parent::__construct($errormsg);
     	$this->setMax($max);
+		if (!is_null($error)) {
+			$this->error = $error;
+		}
     }
     
     public function isValid($var)
@@ -29,20 +32,30 @@ class MaxValidation extends AbstractValidation
     		return $this->checkFloat($var);
     }
 
-	public function parseParam($param) {
+	public function parseParams($param) {
 		if (is_string($param)) {
 			list($max, $message) = array_pad(explode(',', $param), 2, '');
 			if (!empty($max))
 				$this->setMax($max);
 			if (!empty($message))
-				$this->setErrorMsg($message);
+				$this->error = $message;
 		}
 		return $this;
 	}
 
-	public function getParamAsArray()
+	public function getParams()
 	{
 		return [$this->max];
+	}
+
+	/**
+	 * 
+	 *
+	 * @return string
+	 */
+	public function getError(): string
+	{
+		return $this->error;
 	}
 
     protected function checkString($var)
@@ -84,7 +97,7 @@ class MaxValidation extends AbstractValidation
 		$this->max = $this->get_numeric($max);
 		//lancer une exception si max === null;
 		if ($this->max === null || $this->max <= 0) {
-			throw new InvalidArgumentException('Argument invalide, $max doit être de type numeric  plus grand que 0 ex: 256 ou \'256\'');
+			throw new \InvalidArgumentException('Argument invalide, $max doit être de type numeric  plus grand que 0 ex: 256 ou \'256\'');
 		}
 		return $this;
 	}

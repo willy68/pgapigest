@@ -4,7 +4,6 @@ namespace Framework\Validator\Validation;
 
 use Framework\Validator\ValidationInterface;
 
-
 class MinValidation implements ValidationInterface
 {
 
@@ -23,10 +22,10 @@ class MinValidation implements ValidationInterface
 	/**
 	 * 
 	 *
-	 * @param [type] $param
+	 * @param string $param
 	 * @return self
 	 */
-	public function parseParam($param): self
+	public function parseParams(string $param): self
 	{
 		if (is_string($param)) {
 			list($min, $message) = array_pad(explode(',', $param), 2, '');
@@ -38,11 +37,32 @@ class MinValidation implements ValidationInterface
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @return array
+	 */
 	public function getParams(): array
 	{
 		return [$this->min];
 	}
 
+	/**
+	 * 
+	 *
+	 * @return string
+	 */
+	public function getError(): string
+	{
+		return $this->error;
+	}
+
+	/**
+	 * 
+	 *
+	 * @param mixed $var
+	 * @return bool
+	 */
 	public function isValid($var): bool
 	{
 		if (is_numeric($var))
@@ -55,12 +75,31 @@ class MinValidation implements ValidationInterface
 			return $this->checkFloat($var);
 	}
 
-	public function getError(): string
+	/**
+	 * 
+	 *
+	 * @param int $min
+	 * @return self
+	 */
+	public function setMin($min = 1): self
 	{
-		return $this->error;
+		$this->min = $this->get_numeric($min);
+		//lancer une exception si min === null;
+		if ($this->min === null || $this->min < 0) {
+			throw new \InvalidArgumentException(
+				'Argument invalide, $min doit être de type numeric plus grand ou égal a 0 ex: 2 ou \'2\''
+			);
+		}
+		return $this;
 	}
 
-	protected function checkString($var)
+	/**
+	 * 
+	 *
+	 * @param string $var
+	 * @return bool
+	 */
+	protected function checkString(string $var): bool
 	{
 		$check = true;
 		if (strlen($var) < $this->min)
@@ -69,7 +108,13 @@ class MinValidation implements ValidationInterface
 		return $check;
 	}
 
-	protected function checkInt($var)
+	/**
+	 * 
+	 *
+	 * @param int $var
+	 * @return bool
+	 */
+	protected function checkInt(int $var): bool
 	{
 		$check = true;
 		if ($var < $this->min)
@@ -78,7 +123,13 @@ class MinValidation implements ValidationInterface
 		return $check;
 	}
 
-	protected function checkFloat($var)
+	/**
+	 * 
+	 *
+	 * @param float $var
+	 * @return bool
+	 */
+	protected function checkFloat(float $var): bool
 	{
 		$check = true;
 		if ($var < $this->min)
@@ -87,7 +138,13 @@ class MinValidation implements ValidationInterface
 		return $check;
 	}
 
-	protected function checkNumeric($var)
+	/**
+	 * 
+	 *
+	 * @param mixed $var
+	 * @return bool
+	 */
+	protected function checkNumeric($var): bool
 	{
 		$check = true;
 
@@ -98,17 +155,12 @@ class MinValidation implements ValidationInterface
 		return $check;
 	}
 
-	public function setMin($min = 1)
-	{
-		$this->min = $this->get_numeric($min);
-		//lancer une exception si min === null;
-		if ($this->min === null || $this->min < 0) {
-			throw new \InvalidArgumentException(
-				'Argument invalide, $min doit être de type numeric plus grand ou égal a 0 ex: 2 ou \'2\''
-			);
-		}
-	}
-
+	/**
+	 * 
+	 *
+	 * @param mixed $val
+	 * @return mixed
+	 */
 	protected function get_numeric($val)
 	{
 		if (is_numeric($val)) {

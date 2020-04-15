@@ -149,7 +149,7 @@ class ValidationRules
 
 			if (!empty($param))
 			{
-				$validation->parseParam((string) $param);
+				$validation->parseParams((string) $param);
 			}
 			if (!$validation->isValid($var)) {
 				$valid = false;
