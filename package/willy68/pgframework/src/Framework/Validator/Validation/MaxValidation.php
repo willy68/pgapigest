@@ -9,17 +9,17 @@ class MaxValidation implements ValidationInterface
 
 	protected $max;
 
-	protected $error;
+	protected $error = 'Le champ %s doit avoir maximum %d caractères';
 
-    public function __construct($max=255, $error = null)
+    public function __construct(int $max = 255, string $error = '')
     {
     	$this->setMax($max);
-		if (!is_null($error)) {
+		if (!empty($error)) {
 			$this->error = $error;
 		}
     }
     
-    public function isValid($var)
+    public function isValid($var): bool
     {
 		//if (empty($var)) return false;
     	if(is_numeric($var))
@@ -32,7 +32,8 @@ class MaxValidation implements ValidationInterface
     		return $this->checkFloat($var);
     }
 
-	public function parseParams($param) {
+	public function parseParams($param): self
+	{
 		if (is_string($param)) {
 			list($max, $message) = array_pad(explode(',', $param), 2, '');
 			if (!empty($max))
@@ -43,7 +44,7 @@ class MaxValidation implements ValidationInterface
 		return $this;
 	}
 
-	public function getParams()
+	public function getParams(): array
 	{
 		return [$this->max];
 	}

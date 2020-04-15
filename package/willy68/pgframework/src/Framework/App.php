@@ -43,7 +43,7 @@ class App implements RequestHandlerInterface
      *
      * @var App
      */
-    private $app = null;
+    private static $app = null;
 
     /**
      * App constructor

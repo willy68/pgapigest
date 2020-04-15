@@ -4,6 +4,7 @@ namespace App\Demo\Controller;
 
 use App\Models\User;
 use Framework\Renderer\RendererInterface;
+use Framework\Validator\Validation\ValidationRules;
 use Psr\Http\Message\ServerRequestInterface;
 
 class DemoController
@@ -27,6 +28,8 @@ class DemoController
         RendererInterface $renderer,
         \PDO $pdo
     ): string {
+        $validation = new ValidationRules('auteur', 'required|min:3|max:10');
+        $validation->isValid('');
         /** @var \User $user */
         $user = User::find_by_email(['email' => 'william.lety@gmail.com']);
         $user_array = $user->to_array();

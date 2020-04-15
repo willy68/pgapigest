@@ -2,6 +2,7 @@
 
 namespace Framework\Validator\Validation;
 
+use Framework\App;
 use Framework\Validator\ValidationError;
 use Framework\Validator\ValidationInterface;
 
@@ -80,32 +81,12 @@ class ValidationRules
 		$options = explode('|', $rules);
 		
 		foreach ($options as $option) {
-			$rule = explode(':', $option);
-			$className = '';
-			$filter = false;
-			foreach ($rule as $key => $value) {
-				//If $key is 0 $value is the class name validation with no param
-				if ($key === 0)
-				{
-					if (strtolower($value) === 'filter') {
-						$filter = true;
-					}
-					else {
-						$className = ucfirst($value).'Validation';
-						$this->validationRules[$className] = '';
-					}
-				}
-				//$key is associative string validation class name is in $key and array param is the value
-				else
-				{
-					if ($filter) {
-						$className = ucfirst($value).'Filter';
-						$this->filterRules[$className] = '';
-					}
-					else {
-						$this->validationRules[$className] = $value;
-					}
-				}
+			list($key, $value) = array_pad(explode(':', $option), 2, '');
+            if (strtolower($key) === 'filter') {
+				$this->filterRules[$value] = '';
+			}
+			else {
+				$this->validationRules[$key] = $value;
 			}
 		}
 		return $this;
@@ -134,6 +115,7 @@ class ValidationRules
 	public function isValid($var): bool
 	{
 		$valid = true;
+		$formValidations = App::getApp()->getContainer()->get('form.validations');
 
 		foreach ($this->filterRules as $key => $param) {
 			$className = '\\Framework\\Validator\\Filter\\'.$key;
@@ -143,9 +125,13 @@ class ValidationRules
 
 		foreach ($this->validationRules as $key => $param)
 		{
-			$className = '\\Framework\\Validator\\Validation\\'. $key;
-			/** @var ValidationInterface $validation*/
-			$validation = new $className();
+			if (array_key_exists($key, $formValidations)) {
+				/** @var ValidationInterface $validation*/
+				$validation = $formValidations[$key];
+			}
+			else {
+				continue;
+			}
 
 			if (!empty($param))
 			{
