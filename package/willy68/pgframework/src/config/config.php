@@ -25,10 +25,13 @@ use Framework\Validator\Filter\TrimFilter;
 use Framework\Validator\Validation\DateFormatValidation;
 use Framework\Validator\Validation\EmailConfirmValidation;
 use Framework\Validator\Validation\EmailValidation;
+use Framework\Validator\Validation\ExtensionValidation;
 use Framework\Validator\Validation\MaxValidation;
 use Framework\Validator\Validation\MinValidation;
 use Framework\Validator\Validation\RangeValidation;
 use Framework\Validator\Validation\RequiredValidation;
+use Framework\Validator\Validation\SlugValidation;
+use Framework\Validator\Validation\UploadedValidation;
 use Framework\Validator\Validations\NotEmptyValidation;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
@@ -60,7 +63,10 @@ return [
         'email' => EmailValidation::class,
         'emailConfirm' => EmailConfirmValidation::class,
         'notEmpty' => NotEmptyValidation::class,
-        'range' => RangeValidation::class
+        'range' => RangeValidation::class,
+        'filetype' => ExtensionValidation::class,
+        'uploaded' => UploadedValidation::class,
+        'slug' => SlugValidation::class
     ]),
     'form.filters' => \DI\add([
         'trim' => TrimFilter::class
