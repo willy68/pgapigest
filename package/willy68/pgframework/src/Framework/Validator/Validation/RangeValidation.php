@@ -6,19 +6,22 @@ use Framework\Validator\ValidationInterface;
 
 class RangeValidation implements ValidationInterface
 {
-    protected $error = 'Le champ %s doit avoir entre %d et %d caractères';
+    protected $error = 'Le champ %s doit être entre %d et %d';
 
     protected $min;
 
     protected $max;
 
-    public function __construct($min = 1, $max = 255)
+    public function __construct($min = 1, $max = 255, string $errormsg = null)
     {
+        if ($errormsg !== null) {
+            $this->error = $errormsg;
+        }
         $this->setMin($min);
         $this->setMax($max);
     }
 
-    public function parseParams($param)
+    public function parseParams($param): self
     {
         if (is_string($param)) {
             list($min, $max, $message) = array_pad(explode(',', $param), 3, '');
@@ -32,7 +35,7 @@ class RangeValidation implements ValidationInterface
         return $this;
     }
 
-    public function getParams()
+    public function getParams(): array
     {
         return [$this->min, $this->max];
     }
@@ -47,7 +50,7 @@ class RangeValidation implements ValidationInterface
         return $this->error;
     }
 
-    public function isValid($var)
+    public function isValid($var): bool
     {
         if (!isset($var)) return false;
         if (is_numeric($var))
@@ -60,7 +63,7 @@ class RangeValidation implements ValidationInterface
             return $this->checkFloat($var);
     }
 
-    protected function checkString($var)
+    protected function checkString($var): bool
     {
         $len = strlen($var);
         if ($len < $this->min || $len > $this->max)
@@ -69,7 +72,7 @@ class RangeValidation implements ValidationInterface
         return true;
     }
 
-    protected function checkInt($var)
+    protected function checkInt($var): bool
     {
         if ($var < $this->min || $var > $this->max)
             return false;
@@ -77,7 +80,7 @@ class RangeValidation implements ValidationInterface
         return true;
     }
 
-    protected function checkFloat($var)
+    protected function checkFloat($var): bool
     {
         if ($var < $this->min || $var > $this->max)
             return false;
@@ -85,7 +88,7 @@ class RangeValidation implements ValidationInterface
         return true;
     }
 
-    protected function checkNumeric($var)
+    protected function checkNumeric($var): bool
     {
         if (($val = $this->get_numeric($var)) !== null) {
             if ($val < $this->min || $val > $this->max)
@@ -94,7 +97,7 @@ class RangeValidation implements ValidationInterface
         return true;
     }
 
-    public function setMax($max = null)
+    public function setMax($max = null): self
     {
         $this->max = $this->get_numeric($max);
         //lancer une exception si max === null;
@@ -103,9 +106,10 @@ class RangeValidation implements ValidationInterface
                 'Argument invalide, $max doit être de type numeric plus grand que 0 ex: 256 ou \'256\''
             );
         }
+        return $this;
     }
 
-    public function setMin($min = null)
+    public function setMin($min = null): self
     {
         $this->min = $this->get_numeric($min);
         //lancer une exception si min === null;
@@ -114,6 +118,7 @@ class RangeValidation implements ValidationInterface
                 'Argument invalide, $min doit être de type numeric plus grand ou égal a 0 ex: 2 ou \'2\''
             );
         }
+        return $this;
     }
 
     protected function get_numeric($val)

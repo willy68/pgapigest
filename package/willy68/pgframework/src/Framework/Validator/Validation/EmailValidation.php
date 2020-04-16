@@ -3,22 +3,22 @@
 namespace Framework\Validator\Validation;
 
 use Framework\Validator\ValidationInterface;
-  
+
 class EmailValidation implements ValidationInterface
 {
-  protected $error;
+	protected $error = 'Le champ %s doit être une adresse E-mail valide';
 
-    public function __construct($errormsg=null)
-    {
-		if ($errormsg === null) {
-			$this->error = 'Le champ %s doit être une adresse E-mail valide.';
-		}
-    }
+	public function __construct($error = null)
+	{
+        if (!is_null($error)) {
+            $this->error = $error;
+        }
+	}
 
-    public function isValid($var)
-    {
-    	return $this->checkEmail($var);
-    }
+	public function isValid($var): bool
+	{
+		return $this->checkEmail($var);
+	}
 
 	/**
 	 * 
@@ -26,8 +26,8 @@ class EmailValidation implements ValidationInterface
 	 * @param string $param
 	 * @return self
 	 */
-    public function parseParams(string $param): self
-    {
+	public function parseParams(string $param): self
+	{
 		return $this;
 	}
 
@@ -51,16 +51,13 @@ class EmailValidation implements ValidationInterface
 		return $this->error;
 	}
 
-    protected function checkEmail($var)
-    {
-    	if (is_string($var))
-    	{
-	        if (filter_var($var, FILTER_VALIDATE_EMAIL) !== false)
-	        {
+	protected function checkEmail($var): bool
+	{
+		if (is_string($var)) {
+			if (filter_var($var, FILTER_VALIDATE_EMAIL) !== false) {
 				return true;
-	        }
-         }
-        return false;
-    }
-    
+			}
+		}
+		return false;
+	}
 }

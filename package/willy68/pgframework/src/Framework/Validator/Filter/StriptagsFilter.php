@@ -1,30 +1,22 @@
 <?php
-	namespace Library\Validator\Filters;
-  /*** class StriptagsFilter ***/
-  
-class StriptagsFilter extends AbstractFilter
+
+namespace Framework\Validator\Filter;
+
+use Framework\Validator\FilterInterface;
+
+class StriptagsFilter extends AbstractFilter implements FilterInterface
 {
-
+    
     /**
+     * 
      *
-     * @the constructor
-     *
+     * @param mixed $var
+     * @return mixed
      */
-    public function __construct()
-    {
-    }
-
-	/**
-	 *
-	 * filter $var method
-	 * return $var after filter if is set or just $var without filter
-	 */
     public function filter($var)
     {
-    	if(is_set($var)) {
-    		return strip_tags($var);
-    	}
-    	else return $var;
+        if ($this->is_set($var)) {
+            return strip_tags($var);
+        } else return $var;
     }
-    
 }

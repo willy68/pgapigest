@@ -22,9 +22,14 @@ use Framework\Renderer\RendererInterface;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\ActiveRecord\ActiveRecordFactory;
 use Framework\Validator\Filter\TrimFilter;
+use Framework\Validator\Validation\DateFormatValidation;
+use Framework\Validator\Validation\EmailConfirmValidation;
+use Framework\Validator\Validation\EmailValidation;
 use Framework\Validator\Validation\MaxValidation;
 use Framework\Validator\Validation\MinValidation;
+use Framework\Validator\Validation\RangeValidation;
 use Framework\Validator\Validation\RequiredValidation;
+use Framework\Validator\Validations\NotEmptyValidation;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuupola\Middleware\JwtAuthentication;
@@ -50,7 +55,12 @@ return [
     'form.validations' => \DI\add([
         'required' => RequiredValidation::class,
         'min' => MinValidation::class,
-        'max' => MaxValidation::class
+        'max' => MaxValidation::class,
+        'date' => DateFormatValidation::class,
+        'email' => EmailValidation::class,
+        'emailConfirm' => EmailConfirmValidation::class,
+        'notEmpty' => NotEmptyValidation::class,
+        'range' => RangeValidation::class
     ]),
     'form.filters' => \DI\add([
         'trim' => TrimFilter::class

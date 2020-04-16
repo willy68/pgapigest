@@ -3,34 +3,39 @@
 namespace Framework\Validator\Validation;
 
 use Framework\Validator\ValidationInterface;
-  
+use Psr\Http\Message\ServerRequestInterface;
+
 class EmailConfirmValidation implements ValidationInterface
 {
-	protected $error;
+	protected $error = 'Le champ %s doit être un E-mail identique avec le champ %s';
 
 	protected $fieldName;
 
-	protected $form;
+	protected $params = [];
 
-    public function __construct($fieldName = null, $errormsg = null)
-    {
-		if ($errormsg === null) {
-			$this->error = 'Le champ %1$s doit être un E-mail identique avec le champ %2$s';
+	public function __construct(
+		ServerRequestInterface $request,
+		string $fieldName = null,
+		string $errormsg = null
+	) {
+		if ($errormsg !== null) {
+			$this->error = $errormsg;
 		}
-    	$this->setFieldName($fieldName);
-    }
-	
-    public function isValid($var)
-    {
-    	if ($this->checkField($var)) {
-    		return parent::isValid($var);
-    	}
-    	else {
-    		return false;
-    	}
-    }
+		$this->params = $request->getParsedBody();
+		$this->setFieldName($fieldName);
+	}
 
-	public function parseParams($param) {
+	public function isValid($var): bool
+	{
+		if ($this->checkField($var)) {
+			return parent::isValid($var);
+		} else {
+			return false;
+		}
+	}
+
+	public function parseParams($param): self
+	{
 		if (is_string($param)) {
 			list($fieldName, $message) = array_pad(explode(',', $param), 2, '');
 			if (!empty($message))
@@ -41,7 +46,7 @@ class EmailConfirmValidation implements ValidationInterface
 		return $this;
 	}
 
-	public function getParams()
+	public function getParams(): array
 	{
 		return [$this->fieldName];
 	}
@@ -56,21 +61,21 @@ class EmailConfirmValidation implements ValidationInterface
 		return $this->error;
 	}
 
-    protected function checkField($var)
-    {
-    	if (is_string($var))
-    	{
-			if (isset($_POST[$this->fieldName])) {
-				return $_POST[$this->fieldName] === $var;
-			}
-        }
-        return false;
-    }
-
-	public function setFieldName($fieldName)
+	protected function checkField(string $var): bool
 	{
-		if (is_string($fieldName))
-			$this->fieldName = $fieldName;
+		if (is_string($var)) {
+			if (isset($this->params[$this->fieldName])) {
+				return $this->params[$this->fieldName] === $var;
+			}
+		}
+		return false;
 	}
-    
+
+	public function setFieldName(string $fieldName): self
+	{
+		if (is_string($fieldName)) {
+			$this->fieldName = $fieldName;
+		}
+		return $this;
+	}
 }

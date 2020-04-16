@@ -4,7 +4,7 @@ namespace Framework\Validator\Filter;
 
 use Framework\Validator\FilterInterface;
 
-class TrimFilter implements FilterInterface
+class TrimFilter extends AbstractFilter implements FilterInterface
 {
     /**
      * return $var after filter if is set or just $var without filter
@@ -14,9 +14,8 @@ class TrimFilter implements FilterInterface
      */
     public function filter($var)
     {
-    	if(!empty($var)) {
-    		return trim($var);
-    	}
-    	else return $var;
+        if ($this->is_set($var)) {
+            return trim($var);
+        } else return $var;
     }
 }

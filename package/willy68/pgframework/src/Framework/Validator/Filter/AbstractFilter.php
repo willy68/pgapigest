@@ -1,44 +1,22 @@
 <?php
-	namespace Library\Validator\Filters;
-  /*** class AbstractFilter ***/
-  
+
+namespace Framework\Validator\Filter;
+
 abstract class AbstractFilter
 {
 
     /**
      *
-     * @the constructor
-     *
-     */
-    public function __construct()
-    {
-    }
-
-	/**
-	 *
-	 * filter $var method
-	 * return $var after filter
-	 */
-    abstract public function filter($var);
-
-    /**
-     *
      * @Check if POST variable is set
      *
-     * @access private
+     * @access protected
      *
-     * @param string $var The POST variable to check
+     * @param string $var variable to check
+     * @return bool
      *
      */
-    protected function is_set($var)
+    protected function is_set(string $var): bool
     {
-		$check = true;
-        if(!isset($var))
-			$check = false;
-        else if(!strlen($var))
-        	$check = false;
-        	
-        return $check;
-    }    
-    
+        return (bool)(isset($var) && strlen($var));
+    }
 }
