@@ -117,17 +117,23 @@ class PostCrudAction extends CrudAction
     {
         $validator = parent::getValidator($request)
             ->required('name', 'slug', 'content', 'created_at', 'category_id')
-            ->length('content', 2)
+            /*->length('content', 2)
             ->length('name', 2, 250)
-            ->length('slug', 2, 100)
+            ->length('slug', 2, 100)*/
+            ->addRules([
+                'content' => 'min:2',
+                'name'    => 'range:2,250',
+                'slug'    => 'range:2,100',
+                'created_at' => 'date:Y-m-d H:i:s'
+            ])
             ->exists(
                 'category_id',
                 Categories::table_name(),
                 Categories::connection()->connection
             )
             ->extension('image', ['jpg', 'png'])
-            ->slug('slug')
-            ->dateTime('created_at');
+            ->slug('slug');
+            //->dateTime('created_at');
         if (is_null($request->getAttribute('id'))) {
             $validator->uploaded('image');
         }

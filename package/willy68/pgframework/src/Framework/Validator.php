@@ -251,17 +251,15 @@ class Validator
     /**
      * Add rules to validator
      * 
-     *      $key            $value
-     * 
      * 'fieldName' => 'rule1|rule2:50|filter:trim'
      * 
      * ex addRules([
      * 
      *      'auteur' => 'required|max:50|min:3|filter:trim',
      * 
-	 *      'email' => 'required|email|filter:trim',
+     *      'email' => 'required|email|filter:trim',
      * 
-	 *      'emailConfirm' => 'required|emailConfirm:email|filter:trim'
+     *      'emailConfirm' => 'required|emailConfirm:email|filter:trim'
      * 
      * ]);
      *
@@ -271,8 +269,10 @@ class Validator
     public function addRules(array $rules): self
     {
         if (!empty($rules)) {
-            foreach($rules as $key => $value) {
-                $this->validations[] = new ValidationRules($key, $value);
+            foreach ($rules as $key => $value) {
+                $validation = new ValidationRules($key, $value);
+                $validation->isValid($this->getValue($key));
+                $this->errors = array_merge($this->errors, $validation->getErrors());
             }
         }
         return $this;

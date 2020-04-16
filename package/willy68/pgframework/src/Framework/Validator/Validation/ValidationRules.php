@@ -81,7 +81,7 @@ class ValidationRules
 		$options = explode('|', $rules);
 		
 		foreach ($options as $option) {
-			list($key, $value) = array_pad(explode(':', $option), 2, '');
+			list($key, $value) = array_pad(explode(':', $option, 2), 2, '');
             if (strtolower($key) === 'filter') {
 				$this->filterRules[$value] = '';
 			}
@@ -144,7 +144,7 @@ class ValidationRules
 				$valid = false;
 				$this->addError(
 					$this->fieldName,
-					strtolower($key),
+					$key,
 					$validation->getParams(),
 					$validation->getError()
 				);
