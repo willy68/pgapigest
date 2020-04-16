@@ -16,64 +16,62 @@ class ExtensionValidation implements ValidationInterface
         'pdf' => 'application/pdf'
     ];
 
-    protected $extensions = [];
+    protected array $extensions = [];
 
-	protected string $error = "Le champ %s n'est pas au format valide (%s)";
+    protected string $error = "Le champ %s n'est pas au format valide (%s)";
 
-	public function __construct(array $extensions = [], string $error = null)
-	{
-		if (!is_null($error)) {
-			$this->error = $error;
+    /**
+     * ExtensionValidation constructor.
+     * @param array $extensions
+     * @param string|null $error
+     */
+    public function __construct(array $extensions = [], string $error = null)
+    {
+        if (!is_null($error)) {
+            $this->error = $error;
         }
         $this->extensions = $extensions;
-	}
+    }
 
-	/**
-	 * 
-	 *
-	 * @param string $param
-	 * @return self
-	 */
-	public function parseParams(string $param): self
-	{
-		if (is_string($param)) {
+    /**
+     * @param string $param
+     * @return $this
+     */
+    public function parseParams(string $param): self
+    {
+        if (is_string($param)) {
             list($ext, $msg) = explode(']', $param);
             $ext = substr($ext, 1);
-			$this->extensions = (explode(',', $ext)) ?: [];
-			if (!empty($msg))
-				$this->error = substr($msg, 1);
-		}
-		return $this;
-	}
+            $this->extensions = (explode(',', $ext)) ?: [];
+            if (!empty($msg)) {
+                $this->error = substr($msg, 1);
+            }
+        }
+        return $this;
+    }
 
-	/**
-	 * 
-	 *
-	 * @return array
-	 */
-	public function getParams(): array
-	{
-		return [join(',', $this->extensions)];
-	}
+    /**
+     * @return array
+     */
+    public function getParams(): array
+    {
+        return [join(',', $this->extensions)];
+    }
 
-	/**
-	 * 
-	 *
-	 * @return string
-	 */
-	public function getError(): string
-	{
-		return $this->error;
-	}
+    /**
+     * @return string
+     */
+    public function getError(): string
+    {
+        return $this->error;
+    }
 
-	/**
-	 * 
-	 *
-	 * @param mixed $file
-	 * @return bool
-	 */
-	public function isValid($file): bool
-	{
+    /**
+     * @param mixed $file
+     * @return bool
+     */
+    public function isValid($file): bool
+    {
         /** @var UploadedFileInterface $file */
         if ($file !== null && $file->getError() === UPLOAD_ERR_OK) {
             $type = $file->getClientMediaType();
@@ -84,5 +82,5 @@ class ExtensionValidation implements ValidationInterface
             }
         }
         return true;
-	}
+    }
 }

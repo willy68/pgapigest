@@ -6,9 +6,9 @@ use Framework\Validator\ValidationInterface;
 
 class RequiredValidation implements ValidationInterface
 {
-    protected $error = 'Le champ %s est obligatoire';
+    protected string $error = 'Le champ %s est obligatoire';
 
-    public function __construct($error =  '')
+    public function __construct($error = '')
     {
         if (!empty($error)) {
             $this->error = $error;
@@ -22,23 +22,23 @@ class RequiredValidation implements ValidationInterface
 
     public function parseParams($param): self
     {
-		return $this;
-	}
+        return $this;
+    }
 
-	public function getParams(): array
-	{
-		return [];
-	}
+    public function getParams(): array
+    {
+        return [];
+    }
 
-	/**
-	 * 
-	 *
-	 * @return string
-	 */
-	public function getError(): string
-	{
-		return $this->error;
-	}
+    /**
+     *
+     *
+     * @return string
+     */
+    public function getError(): string
+    {
+        return $this->error;
+    }
 
     /**
      *
@@ -52,15 +52,15 @@ class RequiredValidation implements ValidationInterface
     protected function is_set($var): bool
     {
         $check = true;
-        if (!isset($var))
+        if (!isset($var)) {
             $check = false;
-        else if (is_array($var))
+        } elseif (is_array($var)) {
             $check = !empty($var);
-        else if (is_string($var)) // une chaine constituée que d'espaces est considérée comme vide!
+        } elseif (is_string($var)) { // une chaine constituée que d'espaces est considérée comme vide!
             $check = (bool) strlen(trim($var));
-        else
+        } else {
             $check = !empty($var); // autre type de variable
-
+        }
         return $check;
     }
 }

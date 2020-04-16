@@ -6,16 +6,16 @@ use Framework\Validator\ValidationInterface;
 
 class RangeValidation implements ValidationInterface
 {
-    protected $error = 'Le champ %s doit être entre %d et %d';
+    protected string $error = 'Le champ %s doit être entre %d et %d';
 
-    protected $min;
+    protected int $min;
 
-    protected $max;
+    protected int $max;
 
-    public function __construct($min = 1, $max = 255, string $errormsg = null)
+    public function __construct(int $min = 1, int $max = 255, string $error = null)
     {
-        if ($errormsg !== null) {
-            $this->error = $errormsg;
+        if ($error !== null) {
+            $this->error = $error;
         }
         $this->setMin($min);
         $this->setMax($max);
@@ -25,12 +25,15 @@ class RangeValidation implements ValidationInterface
     {
         if (is_string($param)) {
             list($min, $max, $message) = array_pad(explode(',', $param), 3, '');
-            if (!empty($min))
+            if (!empty($min)) {
                 $this->setMin($min);
-            if (!empty($max))
+            }
+            if (!empty($max)) {
                 $this->setMax($max);
-            if (!empty($message))
+            }
+            if (!empty($message)) {
                 $this->error = $message;
+            }
         }
         return $this;
     }
@@ -41,7 +44,7 @@ class RangeValidation implements ValidationInterface
     }
 
     /**
-     * 
+     *
      *
      * @return string
      */
@@ -52,54 +55,62 @@ class RangeValidation implements ValidationInterface
 
     public function isValid($var): bool
     {
-        if (!isset($var)) return false;
-        if (is_numeric($var))
+        if (!isset($var)) {
+            return false;
+        }
+        if (is_numeric($var)) {
             return $this->checkNumeric($var);
-        else if (is_string($var))
+        } elseif (is_string($var)) {
             return $this->checkString($var);
-        else if (is_int($var))
+        } elseif (is_int($var)) {
             return $this->checkInt($var);
-        else if (is_float($var))
+        } elseif (is_float($var)) {
             return $this->checkFloat($var);
+        }
+        return true;
     }
 
     protected function checkString($var): bool
     {
         $len = strlen($var);
-        if ($len < $this->min || $len > $this->max)
+        if ($len < $this->min || $len > $this->max) {
             return false;
+        }
 
         return true;
     }
 
     protected function checkInt($var): bool
     {
-        if ($var < $this->min || $var > $this->max)
+        if ($var < $this->min || $var > $this->max) {
             return false;
+        }
 
         return true;
     }
 
     protected function checkFloat($var): bool
     {
-        if ($var < $this->min || $var > $this->max)
+        if ($var < $this->min || $var > $this->max) {
             return false;
+        }
 
         return true;
     }
 
     protected function checkNumeric($var): bool
     {
-        if (($val = $this->get_numeric($var)) !== null) {
-            if ($val < $this->min || $val > $this->max)
+        if (($val = $this->getNumeric($var)) !== null) {
+            if ($val < $this->min || $val > $this->max) {
                 return false;
+            }
         }
         return true;
     }
 
     public function setMax($max = null): self
     {
-        $this->max = $this->get_numeric($max);
+        $this->max = $this->getNumeric($max);
         //lancer une exception si max === null;
         if ($this->max === null || $this->max <= 0) {
             throw new \InvalidArgumentException(
@@ -109,9 +120,9 @@ class RangeValidation implements ValidationInterface
         return $this;
     }
 
-    public function setMin($min = null): self
+    public function setMin($min): self
     {
-        $this->min = $this->get_numeric($min);
+        $this->min = $this->getNumeric($min);
         //lancer une exception si min === null;
         if ($this->min === null || $this->min < 0) {
             throw new \InvalidArgumentException(
@@ -121,7 +132,7 @@ class RangeValidation implements ValidationInterface
         return $this;
     }
 
-    protected function get_numeric($val)
+    protected function getNumeric($val)
     {
         if (is_numeric($val)) {
             return $val + 0;

@@ -6,7 +6,7 @@ use Framework\Validator\ValidationInterface;
 
 class SlugValidation implements ValidationInterface
 {
-    protected $pattern = '/^[0-9a-z]+(-[0-9a-z]*)$/';
+    protected string $pattern = '/^[0-9a-z]+(-[0-9a-z]*)$/';
 
     protected string $error = "Le champ %s n\est pas un slug valide";
 
@@ -18,7 +18,7 @@ class SlugValidation implements ValidationInterface
     }
 
     /**
-     * 
+     *
      *
      * @param string $param
      * @return self
@@ -32,7 +32,7 @@ class SlugValidation implements ValidationInterface
     }
 
     /**
-     * 
+     *
      *
      * @return array
      */
@@ -42,7 +42,7 @@ class SlugValidation implements ValidationInterface
     }
 
     /**
-     * 
+     *
      *
      * @return string
      */
@@ -52,9 +52,9 @@ class SlugValidation implements ValidationInterface
     }
 
     /**
-     * 
      *
-     * @param mixed $file
+     *
+     * @param mixed$value
      * @return bool
      */
     public function isValid($value): bool
