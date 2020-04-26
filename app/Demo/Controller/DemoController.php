@@ -2,10 +2,10 @@
 
 namespace App\Demo\Controller;
 
-use App\Models\User;
+use App\Auth\Models\User;
 use Framework\Renderer\RendererInterface;
-use Framework\Validator\Validation\ValidationRules;
 use Psr\Http\Message\ServerRequestInterface;
+use Framework\Validator\Validation\ValidationRules;
 
 class DemoController
 {
@@ -30,8 +30,8 @@ class DemoController
     ): string {
         $validation = new ValidationRules('auteur', 'required|min:3|max:10|filter:trim');
         $validation->isValid('Willy ');
-        /** @var \User $user */
-        $user = User::find_by_email(['email' => 'william.lety@gmail.com']);
+        /** @var \App\Auth\Models\User $user */
+        $user = User::find_by_username(['username' => 'admin']);
         $user_array = $user->to_array();
         $mysql_ver = $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
         $params = array_merge($request->getServerParams(), $user_array, [$mysql_ver]);
