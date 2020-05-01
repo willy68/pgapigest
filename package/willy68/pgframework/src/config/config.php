@@ -25,6 +25,7 @@ use Framework\Validator\Filter\TrimFilter;
 use Framework\Validator\Validation\DateFormatValidation;
 use Framework\Validator\Validation\EmailConfirmValidation;
 use Framework\Validator\Validation\EmailValidation;
+use Framework\Validator\Validation\ExistsValidation;
 use Framework\Validator\Validation\ExtensionValidation;
 use Framework\Validator\Validation\MaxValidation;
 use Framework\Validator\Validation\MinValidation;
@@ -66,7 +67,8 @@ return [
         'range' => RangeValidation::class,
         'filetype' => ExtensionValidation::class,
         'uploaded' => UploadedValidation::class,
-        'slug' => SlugValidation::class
+        'slug' => SlugValidation::class,
+        'exists' => ExistsValidation::class
     ]),
     'form.filters' => \DI\add([
         'trim' => TrimFilter::class

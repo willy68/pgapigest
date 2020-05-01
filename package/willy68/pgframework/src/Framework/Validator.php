@@ -163,7 +163,7 @@ class Validator
         $id = $this->getValue($key);
         $statement = $pdo->prepare("SELECT id FROM {$table} WHERE id=?");
         $statement->execute([$id]);
-        if ($statement->fetchColumn() == false) {
+        if ($statement->fetchColumn() === false) {
             $this->addError($key, 'exists', [$table]);
         }
         return $this;

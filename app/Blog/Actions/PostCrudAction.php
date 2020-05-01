@@ -122,19 +122,9 @@ class PostCrudAction extends CrudAction
                 'name'    => 'range:2,250',
                 'slug'    => 'slug|range:2,100',
                 'created_at' => 'date:Y-m-d H:i:s',
-                'image'   => 'filetype:[jpg,png]'
-            ])
-            ->exists(
-                'category_id',
-                Categories::table_name(),
-                Categories::connection()->connection
-            );
-            /*->length('content', 2)
-            ->length('name', 2, 250)
-            ->length('slug', 2, 100)
-            ->extension('image', ['jpg', 'png'])
-            ->dateTime('created_at');
-            ->slug('slug');*/
+                'image'   => 'filetype:[jpg,png]',
+                'category_id' => 'exists:App\Blog\Models\Categories'
+            ]);
         if (is_null($request->getAttribute('id'))) {
             $validator->uploaded('image');
         }
