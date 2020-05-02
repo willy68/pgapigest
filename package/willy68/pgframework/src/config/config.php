@@ -21,6 +21,7 @@ use Framework\Session\SessionInterface;
 use Framework\Renderer\RendererInterface;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\ActiveRecord\ActiveRecordFactory;
+use Framework\Validator\Filter\StriptagsFilter;
 use Framework\Validator\Filter\TrimFilter;
 use Framework\Validator\Validation\{
     DateFormatValidation,
@@ -75,7 +76,8 @@ return [
         'unique' => UniqueValidation::class
     ]),
     'form.filters' => \DI\add([
-        'trim' => TrimFilter::class
+        'trim' => TrimFilter::class,
+        'striptags' => StriptagsFilter::class
     ]),
     SessionInterface::class => create(PHPSession::class),
     CsrfMiddleware::class =>
