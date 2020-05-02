@@ -4,10 +4,10 @@ namespace Framework\Validator\Validation;
 
 use Framework\Validator\ValidationInterface;
 
-class ExistsValidation implements ValidationInterface
+class UniqueValidation implements ValidationInterface
 {
 
-    protected $error = "Le champ %s n'existe pas dans la table %s";
+    protected $error = "Le champ %s doit être unique";
 
     /**
      * Table name
@@ -25,14 +25,35 @@ class ExistsValidation implements ValidationInterface
 
     /**
      *
+     * @var string
+     */
+    protected $column;
+
+    /**
+     * Column value
+     *
+     * @var string
+     */
+    protected $value;
+
+    /**
+     * 
+     * @var int
+     */
+    protected $exclude;
+
+    /**
+     *
      * @param string|null $table
      * @param \PDO $pdo
+     * @param int|null $exclude
      * @param string|null $error
      */
-    public function __construct(\PDO $pdo, ?string $table = null, ?string $error = null)
+    public function __construct(\PDO $pdo, ?string $table = null, ?int $exclude = null ,?string $error = null)
     {
         $this->pdo = $pdo;
         $this->table = $table;
+        $this->exclude = $exclude;
         if (!empty($error)) {
             $this->error = $error;
         }
@@ -44,17 +65,27 @@ class ExistsValidation implements ValidationInterface
      */
     public function isValid($var): bool
     {
-        $statement = $this->pdo->prepare("SELECT id FROM {$this->table} WHERE id=?");
-        $statement->execute([$var]);
-        if ($statement->fetchColumn() === false) {
+        $query = "SELECT id FROM $this->table WHERE $this->column=?";
+        $params = [$var];
+        if ($this->exclude !== null) {
+            $query .= " AND id != ?";
+            $params[] = $this->exclude;
+        }
+        $statement = $this->pdo->prepare($query);
+        $statement->execute($params);
+        if ($statement->fetchColumn() !== false) {
+            $this->value = $var;
             return false;
         }
         return true;
     }
 
     /**
-     * exists:table,errorMessage or
-     * exists:App\Models\modelClass,errorMessage
+     * 
+     * unique:table,columnName,excludeId,errorMessage or
+     * unique:App\Models\modelClass,columnName,excludeId,errorMessage 
+     * optionnal:excludeId and errorMessage
+     * ex:unique:App\Models\Posts,slug,23,errorMessage
      * 
      * @param string $param
      * @return $this
@@ -62,10 +93,17 @@ class ExistsValidation implements ValidationInterface
     public function parseParams($param): self
     {
         if (is_string($param)) {
-            list($tableOrModel, $message) = array_pad(explode(',', $param), 2, '');
+            list($tableOrModel, $column, $exclude, $message) = array_pad(explode(',', $param), 4, '');
             if (!empty($message)) {
                 $this->error = $message;
             }
+            if (!empty($exclude)) {
+                $this->exclude = (int)$exclude;
+            }
+            if (empty($column)) {
+                throw new \InvalidArgumentException("Column name must be specified");
+            }
+            $this->column = $column;
             if (class_exists($tableOrModel)) {
                 /** @var \ActiveRecord\Model $tableOrModel */
                 $this->table = $tableOrModel::table_name();
@@ -83,7 +121,7 @@ class ExistsValidation implements ValidationInterface
      */
     public function getParams(): array
     {
-        return [$this->table];
+        return [$this->column, $this->value];
     }
 
     /**

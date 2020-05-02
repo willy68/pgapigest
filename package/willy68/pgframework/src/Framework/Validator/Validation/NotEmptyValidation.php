@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Validator\Validations;
+namespace Framework\Validator\Validation;
 
 use Framework\Validator\ValidationInterface;
 

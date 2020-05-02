@@ -22,18 +22,21 @@ use Framework\Renderer\RendererInterface;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\ActiveRecord\ActiveRecordFactory;
 use Framework\Validator\Filter\TrimFilter;
-use Framework\Validator\Validation\DateFormatValidation;
-use Framework\Validator\Validation\EmailConfirmValidation;
-use Framework\Validator\Validation\EmailValidation;
-use Framework\Validator\Validation\ExistsValidation;
-use Framework\Validator\Validation\ExtensionValidation;
-use Framework\Validator\Validation\MaxValidation;
-use Framework\Validator\Validation\MinValidation;
-use Framework\Validator\Validation\RangeValidation;
-use Framework\Validator\Validation\RequiredValidation;
-use Framework\Validator\Validation\SlugValidation;
-use Framework\Validator\Validation\UploadedValidation;
-use Framework\Validator\Validations\NotEmptyValidation;
+use Framework\Validator\Validation\{
+    DateFormatValidation,
+    EmailConfirmValidation,
+    EmailValidation,
+    ExistsValidation,
+    ExtensionValidation,
+    MaxValidation,
+    MinValidation,
+    RangeValidation,
+    RequiredValidation,
+    SlugValidation,
+    UniqueValidation,
+    UploadedValidation,
+    NotEmptyValidation
+};
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuupola\Middleware\JwtAuthentication;
@@ -68,7 +71,8 @@ return [
         'filetype' => ExtensionValidation::class,
         'uploaded' => UploadedValidation::class,
         'slug' => SlugValidation::class,
-        'exists' => ExistsValidation::class
+        'exists' => ExistsValidation::class,
+        'unique' => UniqueValidation::class
     ]),
     'form.filters' => \DI\add([
         'trim' => TrimFilter::class
