@@ -2,9 +2,10 @@
 
 namespace App\Blog\Models;
 
+use Framework\Database\ActiveRecord\PaginatedModel;
 use Framework\Database\Query;
 
-class Posts extends BlogModel
+class Posts extends PaginatedModel
 {
     public static $connection = 'blog';
 
@@ -26,14 +27,14 @@ class Posts extends BlogModel
      */
     public static function setPaginatedQuery(Query $query): string
     {
-        static::$paginatedQuery = [];
+        static::$paginatedCondition = [];
         if (!empty($where = $query->getWhere())) {
-            static::$paginatedQuery['conditions'] = [$where];
+            static::$paginatedCondition['conditions'] = [$where];
         }
         if (!empty($order = $query->getOrder())) {
-            static::$paginatedQuery['order'] = $order;
+            static::$paginatedCondition['order'] = $order;
         }
-        static::$paginatedQuery['include'] = ['category'];
+        static::$paginatedCondition['include'] = ['category'];
         return static::class;
     }
 

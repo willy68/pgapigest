@@ -59,7 +59,7 @@ class PostCrudAction extends CrudAction
     protected function formParams(array $params): array
     {
         // $params['categories'] = $this->categoryTable->findList();
-        $params['categories'] = Categories::findList('id, name');
+        $params['categories'] = Categories::findList(['id', 'name']);
         return $params;
     }
 

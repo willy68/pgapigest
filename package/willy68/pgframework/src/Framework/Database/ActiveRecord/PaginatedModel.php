@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Blog\Models;
+namespace Framework\Database\ActiveRecord;
 
 use ActiveRecord;
 use Pagerfanta\Pagerfanta;
 use Framework\Database\Query;
 use Framework\Database\ActiveRecord\PaginatedActiveRecord;
 
-class BlogModel extends ActiveRecord\Model
+class PaginatedModel extends ActiveRecord\Model
 {
  
-    public static $paginatedQuery;
+    public static $paginatedCondition = [];
 
     public static $query;
 
@@ -37,8 +37,8 @@ class BlogModel extends ActiveRecord\Model
     public static function getNbResults(): int
     {
         $options = null;
-        if (!empty(static::$paginatedQuery['conditions'])) {
-            $options['conditions'] = static::$paginatedQuery['conditions'];
+        if (!empty(static::$paginatedCondition['conditions'])) {
+            $options['conditions'] = static::$paginatedCondition['conditions'];
         }
         return static::count($options);
     }
@@ -52,25 +52,24 @@ class BlogModel extends ActiveRecord\Model
      */
     public static function paginatedQuery(int $offset, int $length)
     {
-        static::$paginatedQuery['limit'] = $length;
-        static::$paginatedQuery['offset'] = $offset;
-        return static::find('all', static::$paginatedQuery);
+        static::$paginatedCondition['limit'] = $length;
+        static::$paginatedCondition['offset'] = $offset;
+        return static::find('all', static::$paginatedCondition);
     }
 
     /**
      * set paginated options conditions
      *
      * @param \Framework\Database\Query $query
-     * @return string Class name
+     * @return string static::class
      */
     public static function setPaginatedQuery(Query $query): string
     {
-        static::$paginatedQuery = [];
         if (!empty($where = $query->getWhere())) {
-            static::$paginatedQuery['conditions'] = [$where];
+            static::$paginatedCondition['conditions'] = [$where];
         }
         if (!empty($order = $query->getOrder())) {
-            static::$paginatedQuery['order'] = $order;
+            static::$paginatedCondition['order'] = $order;
         }
         return static::class;
     }
@@ -86,18 +85,14 @@ class BlogModel extends ActiveRecord\Model
     }
 
     /**
+     * 
      *
-     *
+     * @param array $field
      * @return array
      */
-    public static function findList(string $field): array
+    public static function findList(array $field): array
     {
-        $list = [];
-        $results = static::find('all', ['select' => $field]);
-        foreach ($results as $result) {
-            $list[$result->id] = $result->name;
-        }
-        return $list;
+        return static::find('all', ['select' => join(", ", $field)]);
     }
 
     /**

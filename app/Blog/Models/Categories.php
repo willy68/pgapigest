@@ -2,9 +2,10 @@
 
 namespace App\Blog\Models;
 
+use Framework\Database\ActiveRecord\PaginatedModel;
 use Framework\Database\Query;
 
-class Categories extends BlogModel
+class Categories extends PaginatedModel
 {
     public static $connection = 'blog';
 
@@ -20,5 +21,20 @@ class Categories extends BlogModel
     public static function findAll(): Query
     {
         return static::makeQuery()->order('id DESC');
+    }
+
+    /**
+     *
+     *
+     * @return array
+     */
+    public static function findList(array $field): array
+    {
+        $list = [];
+        $results = parent::findList($field);
+        foreach ($results as $result) {
+            $list[$result->id] = $result->name;
+        }
+        return $list;
     }
 }
