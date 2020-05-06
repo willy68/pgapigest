@@ -116,12 +116,12 @@ if [ $1 ]; then
     migrate)
         shift 1
         echo "Lancement d'une migration avec Phinx"
-        de php ./bin/phinx migrate
+        de php ./bin/phinx migrate $@
         ;;
     seed)
         shift 1
         echo "Lancement d'un seed:run avec Phinx"
-        de php ./bin/phinx seed:run
+        de php ./bin/phinx seed:run $@
         ;;
     *)
         print_help

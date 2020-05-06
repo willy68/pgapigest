@@ -22,8 +22,8 @@ return [
         AdminModule::class,
         BlogModule::class,
         AuthModule::class,
-        //ApiModule::class,
-        //ApiClientModule::class
+        ApiModule::class,
+        ApiClientModule::class
     ],
 
     /* Base middlewares PageNotFound must be the last.
