@@ -37,7 +37,7 @@ class UniqueValidation implements ValidationInterface
     protected $value;
 
     /**
-     * 
+     *
      * @var int
      */
     protected $exclude;
@@ -49,7 +49,7 @@ class UniqueValidation implements ValidationInterface
      * @param int|null $exclude
      * @param string|null $error
      */
-    public function __construct(\PDO $pdo, ?string $table = null, ?int $exclude = null ,?string $error = null)
+    public function __construct(\PDO $pdo, ?string $table = null, ?int $exclude = null, ?string $error = null)
     {
         $this->pdo = $pdo;
         $this->table = $table;
@@ -81,12 +81,12 @@ class UniqueValidation implements ValidationInterface
     }
 
     /**
-     * 
+     *
      * unique:table,columnName,excludeId,errorMessage or
-     * unique:App\Models\modelClass,columnName,excludeId,errorMessage 
+     * unique:App\Models\modelClass,columnName,excludeId,errorMessage
      * optionnal:excludeId and errorMessage
      * ex:unique:App\Models\Posts,slug,23,errorMessage
-     * 
+     *
      * @param string $param
      * @return $this
      */

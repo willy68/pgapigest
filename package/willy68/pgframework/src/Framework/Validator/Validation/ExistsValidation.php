@@ -55,7 +55,7 @@ class ExistsValidation implements ValidationInterface
     /**
      * exists:table,errorMessage or
      * exists:App\Models\modelClass,errorMessage
-     * 
+     *
      * @param string $param
      * @return $this
      */

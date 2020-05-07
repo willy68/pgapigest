@@ -32,14 +32,15 @@ class NotEmptyValidation implements ValidationInterface
     protected function is_NotEmpty($var): bool
     {
         $check = true;
-        if (!isset($var))
+        if (!isset($var)) {
             $check = false;
-        else if (is_array($var))
+        } elseif (is_array($var)) {
             $check = !empty($var);
-        else if (is_string($var)) // une chaine constituée que d'espaces est considérée comme vide!
+        } elseif (is_string($var)) { // une chaine constituée que d'espaces est considérée comme vide!
             $check = (bool) strlen(trim($var));
-        else
+        } else {
             $check = !empty($var); // autre type de variable
+        }
 
         return $check;
     }
@@ -48,8 +49,9 @@ class NotEmptyValidation implements ValidationInterface
     {
         if (is_string($param)) {
             list($fieldName, $message) = array_pad(explode(',', $param), 2, '');
-            if (!empty($message))
+            if (!empty($message)) {
                 $this->error = $message;
+            }
         }
         return $this;
     }
@@ -60,7 +62,7 @@ class NotEmptyValidation implements ValidationInterface
     }
 
     /**
-     * 
+     *
      *
      * @return string
      */

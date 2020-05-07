@@ -5,7 +5,7 @@ namespace Framework\Validator;
 interface FilterInterface
 {
     /**
-     * 
+     *
      *
      * @param mixed $var
      * @return mixed

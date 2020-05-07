@@ -85,7 +85,7 @@ class PaginatedModel extends ActiveRecord\Model
     }
 
     /**
-     * 
+     *
      *
      * @param array $field
      * @return array

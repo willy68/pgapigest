@@ -8,7 +8,7 @@ class StriptagsFilter extends AbstractFilter implements FilterInterface
 {
     
     /**
-     * 
+     *
      *
      * @param mixed $var
      * @return mixed
@@ -17,6 +17,8 @@ class StriptagsFilter extends AbstractFilter implements FilterInterface
     {
         if ($this->is_set($var)) {
             return strip_tags($var);
-        } else return $var;
+        } else {
+            return $var;
+        }
     }
 }

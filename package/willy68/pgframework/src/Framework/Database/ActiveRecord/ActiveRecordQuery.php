@@ -173,7 +173,8 @@ class ActiveRecordQuery
      */
     public function params(array $params): self
     {
-        $this->params = array_merge($this->params, $params);;
+        $this->params = array_merge($this->params, $params);
+        ;
         return $this;
     }
 

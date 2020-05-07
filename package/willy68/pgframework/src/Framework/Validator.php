@@ -250,17 +250,17 @@ class Validator
 
     /**
      * Add rules to validator
-     * 
+     *
      * 'fieldName' => 'rule1|rule2:50|filter:trim'
-     * 
+     *
      * ex addRules([
-     * 
+     *
      *      'auteur' => 'required|max:50|min:3|filter:trim',
-     * 
+     *
      *      'email' => 'required|email|filter:trim',
-     * 
+     *
      *      'emailConfirm' => 'required|emailConfirm:email|filter:trim'
-     * 
+     *
      * ]);
      *
      * @param array $rules

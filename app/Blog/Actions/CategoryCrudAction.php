@@ -59,7 +59,7 @@ class CategoryCrudAction extends CrudAction
         return parent::getValidator($request)
             ->addRules([
                 'name' => 'required|range:2,250',
-                'slug' => 'required|range:2,250|slug|unique:App\Blog\Models\Categories,slug,' . 
+                'slug' => 'required|range:2,250|slug|unique:App\Blog\Models\Categories,slug,' .
                     $request->getAttribute('id')
             ]);
             /*
