@@ -9,8 +9,6 @@ class ActiveRecordQuery
 
     private $whereValue = [];
 
-    private $whereOperand = 'AND';
-
     private $select;
 
     /**
@@ -74,14 +72,18 @@ class ActiveRecordQuery
      * @param string[] $condition
      * @return self
      */
-    public function where(array $condition, array $whereValue): self
+    public function where(array $condition, ?array $whereValue = null): self
     {
-        // "(" . join(') AND (', $this->where) . ")";
+        if (empty($this->options['conditions'])) {
+            $this->options['conditions'] = [];
+        }
         $this->options['conditions'] = join(
             ' AND ',
             array_merge($this->options['conditions'], $condition)
         );
-        $this->whereValue[] = array_merge($this->whereValue, $whereValue);
+        if ($whereValue) {
+            $this->setWhereValue($whereValue);
+        }
         return $this;
     }
 
@@ -93,12 +95,16 @@ class ActiveRecordQuery
      */
     public function orWhere(array $condition, ?array $whereValue = null): self
     {
-        // "(" . join(') AND (', $this->where) . ")";
+        if (empty($this->options['conditions'])) {
+            $this->options['conditions'] = [];
+        }
         $this->options['conditions'] = join(
             ' OR ',
             array_merge($this->options['conditions'], $condition)
         );
-        $this->whereValue[] = array_merge($this->whereValue, $whereValue);
+        if ($whereValue) {
+            $this->setWhereValue($whereValue);
+        }
         return $this;
     }
 
