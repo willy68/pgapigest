@@ -114,7 +114,7 @@ class ActiveRecordQuery
      */
     public function setWhereValue(array $whereValue): self
     {
-        $this->whereValue[] = array_merge($this->whereValue, $whereValue);
+        $this->whereValue = array_merge($this->whereValue, $whereValue);
         $this->options['conditions'] = array_merge($this->options['conditions'], $this->whereValue);
         return $this;
     }
