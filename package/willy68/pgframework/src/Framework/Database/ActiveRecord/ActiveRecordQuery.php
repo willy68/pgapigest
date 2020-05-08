@@ -51,7 +51,7 @@ class ActiveRecordQuery
         } else {
             $this->from[] = $table;
         }
-        // $this->from[] = $table;
+        $this->options['from'] = $this->buildFrom();
         return $this;
     }
 
@@ -63,52 +63,51 @@ class ActiveRecordQuery
      */
     public function select(string ...$fields): self
     {
-        $this->select = $fields;
+        $this->options['select'] = join(', ', $fields);
         return $this;
     }
 
     /**
      *
-     * @param string[] $condition
+     * @param string[] ...$condition
      * @return self
      */
-    public function where(array $condition, ?array $whereValue = null): self
+    public function where(string ...$condition): self
     {
         if (empty($this->options['conditions'])) {
             $this->options['conditions'] = [];
         }
-        $this->options['conditions'] = join(
-            ' AND ',
-            array_merge($this->options['conditions'], $condition)
-        );
-        if ($whereValue) {
-            $this->setWhereValue($whereValue);
-        }
+        $this->options['conditions'] = [
+            join(
+                ' AND ',
+                array_merge($this->options['conditions'], $condition)
+            )
+        ];
         return $this;
     }
 
     /**
      *
-     * @param array $condition
-     * @param array|null $whereValue
+     * @param string[] ...$condition
      * @return self
      */
-    public function orWhere(array $condition, ?array $whereValue = null): self
+    public function orWhere(string ...$condition): self
     {
         if (empty($this->options['conditions'])) {
             $this->options['conditions'] = [];
         }
-        $this->options['conditions'] = join(
-            ' OR ',
-            array_merge($this->options['conditions'], $condition)
-        );
-        if ($whereValue) {
-            $this->setWhereValue($whereValue);
-        }
+        $this->options['conditions'] = [
+            join(
+                ' OR ',
+                array_merge($this->options['conditions'], $condition)
+            )
+        ];
         return $this;
     }
 
     /**
+     * - Ajoute les valeur au tableau conditions
+     * - A ne faire qu'après toutes les conditions
      *
      * @param array $whereValue
      * @return self
@@ -116,6 +115,7 @@ class ActiveRecordQuery
     public function setWhereValue(array $whereValue): self
     {
         $this->whereValue[] = array_merge($this->whereValue, $whereValue);
+        $this->options['conditions'] = array_merge($this->options['conditions'], $this->whereValue);
         return $this;
     }
 
@@ -158,16 +158,43 @@ class ActiveRecordQuery
     }
 
     /**
+     *
+     * @param string $group
+     * @return self
+     */
+    public function group(string $group): self
+    {
+        $this->options['group'] = "GROUP BY $group";
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $having
+     * @return self
+     */
+    public function having(string $having): self
+    {
+        $this->options['having'] = "HAVING $having";
+        return $this;
+    }
+
+    /**
      * Undocumented function
      *
-     * @param string $table
-     * @param string $condition
+     * @param string|array $table
+     * @param string|null $condition
      * @param string $type
      * @return self
      */
-    public function join(string $table, string $condition, string $type = 'LEFT'): self
+    public function join($table, ?string $condition = null, string $type = 'LEFT'): self
     {
-        $this->joins[$type][] = [$table, $condition, $type];
+        if (is_array($table)) {
+            $this->options['joins'] = $table;
+        } else {
+            $this->joins[$type][] = [$table, $condition, $type];
+            $this->options['joins'] = $this->buildJoins();
+        }
         return $this;
     }
 
@@ -180,7 +207,6 @@ class ActiveRecordQuery
     public function params(array $params): self
     {
         $this->params = array_merge($this->params, $params);
-        ;
         return $this;
     }
 
@@ -276,5 +302,16 @@ class ActiveRecordQuery
             }
         }
         return join(', ', $from);
+    }
+
+    private function buildJoins()
+    {
+        $parts = [];
+        foreach ($this->joins as $type => $joins) {
+            foreach ($joins as [$table, $condition]) {
+                $parts[] = strtoupper($type) . " JOIN $table ON $condition";
+            }
+        }
+        return join(' ', $parts);
     }
 }
