@@ -3,6 +3,7 @@
 namespace App\Demo\Controller;
 
 use App\Auth\Models\User;
+use Framework\Database\ActiveRecord\ActiveRecordQuery;
 use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Framework\Validator\Validation\ValidationRules;
@@ -30,6 +31,11 @@ class DemoController
     ): string {
         $validation = new ValidationRules('auteur', 'required|min:3|max:10|filter:trim');
         $validation->isValid('Willy ');
+        $query = new ActiveRecordQuery();
+        $query
+            ->where('id = ?', 'user_id = ?')
+            ->orWhere('created_at = now()')
+            ->setWhereValue([2, 5, new \DateTime()]);
         /** @var \App\Auth\Models\User $user */
         $user = User::find_by_username(['username' => 'admin']);
         $user_array = $user->to_array();
