@@ -16,6 +16,15 @@ class User implements AuthUser
 
     private $roles = [];
 
+    /**
+     *
+     * @return int
+     */
+    public function getId(): int
+    {
+        return (int)$this->id;
+    }
+
         /**
      * Undocumented function
      *
@@ -34,5 +43,13 @@ class User implements AuthUser
     public function getRoles(): array
     {
         return $this->roles;
+    }
+
+    /**
+     * Get the value of email
+     */ 
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 }

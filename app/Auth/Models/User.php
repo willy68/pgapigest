@@ -12,6 +12,15 @@ class User extends Model implements AuthUser
     public static $table_name = 'users';
 
     /**
+     *
+     * @return int
+     */
+    public function getId(): int
+    {
+        return (int)$this->id;
+    }
+
+        /**
      * Undocumented function
      *
      * @return string
@@ -29,5 +38,13 @@ class User extends Model implements AuthUser
     public function getRoles(): array
     {
         return $this->roles;
+    }
+
+    /**
+     * Get the value of email
+     */ 
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 }
