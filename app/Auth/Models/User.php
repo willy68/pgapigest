@@ -47,4 +47,14 @@ class User extends Model implements AuthUser
     {
         return $this->email;
     }
+
+    /**
+     *
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
 }

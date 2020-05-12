@@ -4,6 +4,7 @@ namespace App\Auth\Actions;
 
 use App\Auth\DatabaseAuth;
 use Framework\Actions\RouterAwareAction;
+use Framework\Auth\Service\RememberMeAuthCookie;
 use Framework\Renderer\RendererInterface;
 use Framework\Response\ResponseRedirect;
 use Framework\Router;
@@ -62,7 +63,11 @@ class LoginAttemptAction
         if ($user) {
             $path = $this->session->get('auth.redirect')  ?: $this->router->generateUri('admin');
             $this->session->delete('auth.redirect');
-            return new ResponseRedirect($path);
+            $response = new ResponseRedirect($path);
+            if ($params['rememberMe']) {
+                $response = $this->auth->rememberMe($response, $params['username'], $params['password'], 'secret');
+            }
+            return $response;
         } else {
             (new FlashService($this->session))->error('Identifiant ou mot de passe incorrect');
             return $this->redirect('auth.login');

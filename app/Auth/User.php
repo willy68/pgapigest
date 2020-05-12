@@ -52,4 +52,13 @@ class User implements AuthUser
     {
         return $this->email;
     }
+
+    /**
+     *
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
 }

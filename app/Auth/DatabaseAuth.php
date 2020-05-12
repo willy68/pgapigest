@@ -5,7 +5,11 @@ namespace App\Auth;
 use ActiveRecord\RecordNotFound;
 use App\Auth\Models\User;
 use Framework\Auth;
+use Framework\Auth\Service\RememberMeAuthCookie;
+use Framework\Auth\User as AuthUser;
 use Framework\Session\SessionInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class DatabaseAuth implements Auth
 {
@@ -17,6 +21,8 @@ class DatabaseAuth implements Auth
      */
     private $session;
 
+    private $cookie;
+
     /**
      * Undocumented variable
      *
@@ -24,9 +30,10 @@ class DatabaseAuth implements Auth
      */
     private $user;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, RememberMeAuthCookie $cookie)
     {
         $this->session = $session;
+        $this->cookie = $cookie;
     }
 
     /**
@@ -85,5 +92,28 @@ class DatabaseAuth implements Auth
             }
         }
         return null;
+    }
+
+    public function rememberMe(
+        ResponseInterface $response,
+        string $username,
+        string $password,
+        string $secret
+    ): ResponseInterface
+    {
+        return $this->cookie->login($response, $username, $password, $secret);
+    }
+
+    public function rememberMeLogout(ResponseInterface $response): ResponseInterface
+    {
+        return $this->cookie->logout($response);
+    }
+
+    public function autoLogin(ServerRequestInterface $request, string $secret): ?AuthUser
+    {
+        if ($user = $this->getUser()) {
+            return $user;
+        }
+        return $this->cookie->autoLogin($request, $secret);
     }
 }

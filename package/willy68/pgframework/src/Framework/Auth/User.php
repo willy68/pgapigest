@@ -24,6 +24,13 @@ interface User
     public function getUsername(): string;
 
     /**
+     * 
+     *
+     * @return string
+     */
+    public function getPassword(): string;
+
+    /**
      *
      * @return string[]
      */

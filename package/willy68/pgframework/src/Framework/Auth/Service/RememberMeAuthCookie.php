@@ -2,36 +2,40 @@
 
 namespace Framework\Auth\Service;
 
-use Dflydev\FigCookies\SetCookie;
-use Psr\Http\Message\ResponseInterface;
-use Dflydev\FigCookies\FigResponseCookies;
 use Framework\Auth;
-use Framework\Auth\Provider\UserProvider;
 use Framework\Auth\User;
+use Dflydev\FigCookies\SetCookie;
+use App\Auth\ActiveRecordUserProvider;
+use Psr\Http\Message\ResponseInterface;
+use Framework\Auth\Provider\UserProvider;
+use Dflydev\FigCookies\FigResponseCookies;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RememberMeAuthCookie
 {
 
-    const COOKIE_NAME = 'auth.login';
-
-    private $auth;
+    const COOKIE_NAME = 'auth_login';
 
     private $userProvider;
 
     private $cookie;
 
-    public function __construct(Auth $auth, UserProvider $userProvider )
+    public function __construct(ActiveRecordUserProvider $userProvider )
     {
-        $this->auth = $auth;
         $this->userProvider = $userProvider;
     }
 
-    public function login(ResponseInterface $response, string $secret): ResponseInterface
+    public function login(
+        ResponseInterface $response,
+        string $username,
+        string $password,
+        string $secret
+    ): ResponseInterface
     {
-        $username = base64_encode($this->auth->getUser()->getUsername());
-
-        $value = base64_encode($username) . ':' . sha1($secret);
+        $value = AuthSecurityToken::generateSecurityToken(
+            $username,
+            $password,
+            $secret);
 
         $this->cookie = SetCookie::create(SELF::COOKIE_NAME)
                     ->withValue($value)
@@ -44,30 +48,36 @@ class RememberMeAuthCookie
 
     }
 
-    public function autoLogin(ServerRequestInterface $request): ?User
+    public function autoLogin(ServerRequestInterface $request, string $secret): ?User
     {
-        if ($user = $this->auth->getUser()) {
-            return $user;
-        }
         $cookies = $request->getCookieParams();
         if (!empty($cookie = $cookies[self::COOKIE_NAME])) {
-            list($username, $secret) = explode(':', $cookie);
+            list($username, $password) = explode(':', $cookie);
             $username = base64_decode($username);
-            return $this->userProvider->getUser('username', $username);
+            $user = $this->userProvider->getUser('username', $username);
+            if (AuthSecurityToken::validateSecurityToken(
+                $cookie,
+                $username,
+                $user->getPassword(),
+                $secret
+            )) {
+
+                return $user;
+            }
         }
         return null;
     }
 
     public function logout(ResponseInterface $response): ResponseInterface
     {
-        SetCookie::create(SELF::COOKIE_NAME)
+        $cookie = SetCookie::create(SELF::COOKIE_NAME)
             ->withValue('')
             ->withExpires(time() - 3600)
             ->withPath('/')
             ->withDomain(null)
             ->withSecure(false)
             ->withHttpOnly(false);
-        return FigResponseCookies::set($response, $this->cookie);
+        return FigResponseCookies::set($response, $cookie);
     }
 
     /**

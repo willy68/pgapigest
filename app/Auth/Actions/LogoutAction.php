@@ -3,6 +3,7 @@
 namespace App\Auth\Actions;
 
 use App\Auth\DatabaseAuth;
+use Framework\Auth\Service\RememberMeAuthCookie;
 use Framework\Session\FlashService;
 use Framework\Response\ResponseRedirect;
 use Framework\Renderer\RendererInterface;
@@ -32,7 +33,11 @@ class LogoutAction
      */
     private $flashService;
 
-    public function __construct(RendererInterface $renderer, DatabaseAuth $auth, FlashService $flashService)
+    public function __construct(
+        RendererInterface $renderer,
+        DatabaseAuth $auth,
+        FlashService $flashService
+    )
     {
         $this->renderer = $renderer;
         $this->auth = $auth;
@@ -42,7 +47,12 @@ class LogoutAction
     public function __invoke(ServerRequestInterface $request)
     {
         $this->auth->logout();
+        $response = new ResponseRedirect('/blog');
+        $cookies = $request->getCookieParams();
+        if (!empty($cookies[RememberMeAuthCookie::COOKIE_NAME])) {
+            $response = $this->auth->rememberMeLogout($response);
+        }
         $this->flashService->success('Vous êtes maintenant déconnecté');
-        return new ResponseRedirect('/blog');
+        return $response;
     }
 }

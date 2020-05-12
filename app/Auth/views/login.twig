@@ -13,11 +13,16 @@
 {% endif %}
 #}
 
-<form action="{{ path('auth.login') }} " method="post">
-  {{ csrf_input() }}
-  {{ field('username', null, 'Nom d\'utilisateur') }}
-  {{ field('password', null, 'Mot de passe') }}
-  <button class="btn btn-primary">Se connecter</button>
-</form>
+<div class="card mx-auto">
+  <div class="card-body">
+    <form action="{{ path('auth.login') }} " method="post">
+      {{ csrf_input() }}
+      {{ field('username', null, 'Nom d\'utilisateur') }}
+      {{ field('password', null, 'Mot de passe') }}
+      {{ field('rememberMe', null, "Se souvenir de moi:", {type: 'checkbox'}) }}
+      <button class="btn btn-primary">Se connecter</button>
+    </form>
+  </div>
+</div>
 
 {% endblock %}
