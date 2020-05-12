@@ -20,7 +20,7 @@ class DatabaseAuth implements Auth
     /**
      * Undocumented variable
      *
-     * @var \App\Auth\Models\User
+     * @var User
      */
     private $user;
 

@@ -10,7 +10,7 @@ use Framework\Auth\Provider\UserProvider;
 use Framework\Auth\User;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RememberMeCookieLogin
+class RememberMeAuthCookie
 {
 
     const COOKIE_NAME = 'auth.login';
