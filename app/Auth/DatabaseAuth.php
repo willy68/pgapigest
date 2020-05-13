@@ -49,11 +49,11 @@ class DatabaseAuth implements Auth
             return null;
         }
 
-        /* @var \App\Auth\User $user */
+        /** @var \App\Auth\User $user */
         // $user = $this->userTable->findBy('username', $username);
         $user = User::find_by_username($username);
         if ($user && password_verify($password, $user->password)) {
-            $this->session->set('auth.user', $user->id);
+            $this->session->set('auth.user', $user->getId());
             return $user;
         }
         return null;
@@ -79,7 +79,7 @@ class DatabaseAuth implements Auth
         $userId = $this->session->get('auth.user');
 
         if ($userId) {
-            if ($this->user && (int) $this->user->id === (int) $userId) {
+            if ($this->user && (int) $this->user->getId() === (int) $userId) {
                 return $this->user;
             }
             try {
@@ -114,6 +114,11 @@ class DatabaseAuth implements Auth
         if ($user = $this->getUser()) {
             return $user;
         }
-        return $this->cookie->autoLogin($request, $secret);
+        $this->user = $this->cookie->autoLogin($request, $secret);
+        if ($this->user) {
+            $this->session->set('auth.user', $this->user->getId());
+            return $this->user;
+        }
+        return null;
     }
 }

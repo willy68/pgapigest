@@ -60,8 +60,8 @@ class RememberMeAuthCookie
                 $username,
                 $user->getPassword(),
                 $secret
-            )) {
-
+                )
+            ) {
                 return $user;
             }
         }

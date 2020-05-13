@@ -33,14 +33,11 @@ class AuthSecurityToken
         string $security
     ): bool
     {
-        $usernameToVerify = base64_encode($username);
         $passwordToVerify = base64_encode(hash_hmac('sha256', $password, $security, true));
-        list($usernameOrigin, $passwordOrigin) = explode(self::SEPARATOR, $token);
-        $usernameOrigin = base64_decode($username);
-        $passwordOrigin = base64_decode($password);
+        list($usernameOrigin, $passwordOrigin) = self::decodeSecurityToken($token);
         if (
             hash_equals($passwordOrigin, $passwordToVerify) &&
-            $usernameOrigin === $usernameToVerify
+            $usernameOrigin === $username
         ) {
             return true;
         }
