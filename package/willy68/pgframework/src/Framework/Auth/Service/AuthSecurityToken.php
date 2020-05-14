@@ -12,8 +12,8 @@ class AuthSecurityToken
         string $security
     ): string
     {
+        $password = hash_hmac('sha256', $username . $password, $security);
         $username = base64_encode($username);
-        $password = base64_encode(hash_hmac('sha256', $password, $security, true));
         return $username . self::SEPARATOR . $password;
 
     }
@@ -22,7 +22,7 @@ class AuthSecurityToken
     {
         list($username, $password) = explode(self::SEPARATOR, $token);
         $username = base64_decode($username);
-        $password = base64_decode($password);
+        //$password = base64_decode($password);
         return [$username, $password];
     }
 
@@ -33,10 +33,10 @@ class AuthSecurityToken
         string $security
     ): bool
     {
-        $passwordToVerify = base64_encode(hash_hmac('sha256', $password, $security, true));
+        $passwordToVerify = hash_hmac('sha256', $username . $password, $security);
         list($usernameOrigin, $passwordOrigin) = self::decodeSecurityToken($token);
         if (
-            hash_equals($passwordOrigin, $passwordToVerify) &&
+            hash_equals($passwordToVerify, $passwordOrigin) &&
             $usernameOrigin === $username
         ) {
             return true;

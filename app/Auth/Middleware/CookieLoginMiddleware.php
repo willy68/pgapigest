@@ -3,6 +3,7 @@
 namespace App\Auth\Middleware;
 
 use App\Auth\DatabaseAuth;
+use Framework\Auth\ForbiddenException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,6 +29,9 @@ class CookieLoginMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         }
         $user = $this->auth->autoLogin($request, 'secret');
+        if (!$user) {
+            throw new ForbiddenException("Cookie invalid");
+        }
         return $handler->handle($request);
     }
 

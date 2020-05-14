@@ -65,7 +65,7 @@ class LoginAttemptAction
             $this->session->delete('auth.redirect');
             $response = new ResponseRedirect($path);
             if ($params['rememberMe']) {
-                $response = $this->auth->rememberMe($response, $params['username'], $params['password'], 'secret');
+                $response = $this->auth->rememberMe($response, $user->getUsername(), $user->getPassword(), 'secret');
             }
             return $response;
         } else {

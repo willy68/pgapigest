@@ -2,16 +2,14 @@
 
 namespace Framework\Auth\Service;
 
-use Framework\Auth;
 use Framework\Auth\User;
 use Dflydev\FigCookies\SetCookie;
-use App\Auth\ActiveRecordUserProvider;
 use Psr\Http\Message\ResponseInterface;
 use Framework\Auth\Provider\UserProvider;
 use Dflydev\FigCookies\FigResponseCookies;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RememberMeAuthCookie
+class RememberMeAuthCookie implements RememberMeInterface
 {
 
     const COOKIE_NAME = 'auth_login';
@@ -20,7 +18,7 @@ class RememberMeAuthCookie
 
     private $cookie;
 
-    public function __construct(ActiveRecordUserProvider $userProvider )
+    public function __construct(UserProvider $userProvider )
     {
         $this->userProvider = $userProvider;
     }
@@ -52,15 +50,14 @@ class RememberMeAuthCookie
     {
         $cookies = $request->getCookieParams();
         if (!empty($cookie = $cookies[self::COOKIE_NAME])) {
-            list($username, $password) = explode(':', $cookie);
-            $username = base64_decode($username);
+            list($username, $password) = AuthSecurityToken::decodeSecurityToken($cookie);
             $user = $this->userProvider->getUser('username', $username);
             if (AuthSecurityToken::validateSecurityToken(
                 $cookie,
                 $username,
                 $user->getPassword(),
                 $secret
-                )
+                ) && $user
             ) {
                 return $user;
             }

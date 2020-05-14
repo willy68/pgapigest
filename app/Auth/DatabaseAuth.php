@@ -5,7 +5,7 @@ namespace App\Auth;
 use ActiveRecord\RecordNotFound;
 use App\Auth\Models\User;
 use Framework\Auth;
-use Framework\Auth\Service\RememberMeAuthCookie;
+use Framework\Auth\Service\RememberMeInterface;
 use Framework\Auth\User as AuthUser;
 use Framework\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -30,7 +30,7 @@ class DatabaseAuth implements Auth
      */
     private $user;
 
-    public function __construct(SessionInterface $session, RememberMeAuthCookie $cookie)
+    public function __construct(SessionInterface $session, RememberMeInterface $cookie)
     {
         $this->session = $session;
         $this->cookie = $cookie;

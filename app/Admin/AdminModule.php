@@ -29,14 +29,14 @@ class AdminModule extends Module
         $renderer->addPath('admin', __DIR__ . '/views');
         $router->get($prefix, DashboardAction::class . '::index', 'admin');
         $router->crud("$prefix/posts", PostCrudAction::class, 'blog.admin')
-            ->middleware(CookieLoginMiddleware::class)
             ->middleware(ForbidenMiddleware::class)
+            ->middleware(CookieLoginMiddleware::class)
             ->middleware(LoggedInMiddleware::class)
             ->middleware(InvalidCsrfMiddleware::class)
             ->middleware(CsrfMiddleware::class);
         $router->crud("$prefix/categories", CategoryCrudAction::class, 'blog.admin.category')
-            ->middleware(CookieLoginMiddleware::class)
             ->middleware(ForbidenMiddleware::class)
+            ->middleware(CookieLoginMiddleware::class)
             ->middleware(LoggedInMiddleware::class)
             ->middleware(InvalidCsrfMiddleware::class)
             ->middleware(CsrfMiddleware::class);
