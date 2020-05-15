@@ -32,7 +32,8 @@ class CookieLoginMiddleware implements MiddlewareInterface
         if (!$user) {
             throw new ForbiddenException("Cookie invalid");
         }
-        return $handler->handle($request);
+        $response = $handler->handle($request);
+        return $this->auth->resume($request, $response);
     }
 
 }

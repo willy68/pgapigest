@@ -49,8 +49,8 @@ class DatabaseAuth implements Auth
             return null;
         }
 
-        /** @var \App\Auth\User $user */
         // $user = $this->userTable->findBy('username', $username);
+        /** @var User $user */
         $user = User::find_by_username($username);
         if ($user && password_verify($password, $user->password)) {
             $this->session->set('auth.user', $user->getId());
@@ -114,11 +114,16 @@ class DatabaseAuth implements Auth
         if ($user = $this->getUser()) {
             return $user;
         }
-        $this->user = $this->cookie->autoLogin($request, $secret);
-        if ($this->user) {
-            $this->session->set('auth.user', $this->user->getId());
-            return $this->user;
+        $user = $this->cookie->autoLogin($request, $secret);
+        if ($user) {
+            $this->session->set('auth.user', $user->getId());
+            return $user;
         }
         return null;
+    }
+
+    public function resume(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        return $this->cookie->resume($request, $response);
     }
 }

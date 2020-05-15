@@ -4,7 +4,6 @@ namespace App\Auth\Actions;
 
 use App\Auth\DatabaseAuth;
 use Framework\Actions\RouterAwareAction;
-use Framework\Auth\Service\RememberMeAuthCookie;
 use Framework\Renderer\RendererInterface;
 use Framework\Response\ResponseRedirect;
 use Framework\Router;

@@ -22,7 +22,6 @@ class AuthSecurityToken
     {
         list($username, $password) = explode(self::SEPARATOR, $token);
         $username = base64_decode($username);
-        //$password = base64_decode($password);
         return [$username, $password];
     }
 
