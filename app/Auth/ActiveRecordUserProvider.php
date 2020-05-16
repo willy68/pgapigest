@@ -16,7 +16,11 @@ class ActiveRecordUserProvider implements UserProvider
 
     public function getUser(string $field, $value): ?AuthUser
     {
-        $user = $this->model::find(['conditions' => ["$field = ?", $value]]);
+        try {
+            $user = $this->model::find(['conditions' => ["$field = ?", $value]]);
+        } catch(\Exception $e) {
+            return null;
+        }
         if ($user) {
             return $user;
         }
