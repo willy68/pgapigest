@@ -47,12 +47,7 @@ class LogoutAction
     public function __invoke(ServerRequestInterface $request)
     {
         $this->auth->logout();
-        $response = new ResponseRedirect('/blog');
-        $cookies = $request->getCookieParams();
-        if (!empty($cookies[RememberMeAuthCookie::COOKIE_NAME])) {
-            $response = $this->auth->rememberMeLogout($response);
-        }
         $this->flashService->success('Vous êtes maintenant déconnecté');
-        return $response;
+        return new ResponseRedirect('/blog');;
     }
 }

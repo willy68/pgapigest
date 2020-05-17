@@ -8,6 +8,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 interface RememberMeInterface
 {
+    const NAME = 'auth.login';
+
     /**
      * Crée un cookie d'authentification
      *
@@ -17,7 +19,7 @@ interface RememberMeInterface
      * @param string $secret
      * @return ResponseInterface
      */
-    public function login(
+    public function onLogin(
         ResponseInterface $response,
         string $username,
         string $password,
@@ -36,10 +38,11 @@ interface RememberMeInterface
     /**
      * Déconnecte l'utilisateur et invalide le cookie dans la response
      *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function logout(ResponseInterface $response): ResponseInterface;
+    public function onLogout(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface;
 
     /**
      * Renouvelle la date d'expiration du cookie dans la response

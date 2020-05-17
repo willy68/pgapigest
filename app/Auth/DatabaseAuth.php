@@ -53,7 +53,7 @@ class DatabaseAuth implements Auth
         /** @var User $user */
         $user = User::find_by_username($username);
         if ($user && password_verify($password, $user->password)) {
-            $this->session->set('auth.user', $user->getId());
+            $this->setUser($user);
             return $user;
         }
         return null;
@@ -94,6 +94,18 @@ class DatabaseAuth implements Auth
         return null;
     }
 
+    /**
+     * 
+     * @param AuthUser $user
+     * @return Auth
+     */
+    public function setUser(AuthUser $user): self
+    {
+        $this->session->set('auth.user', $user->getId());
+        $this->user = $user;
+        return $this;
+    }
+
     public function rememberMe(
         ResponseInterface $response,
         string $username,
@@ -101,22 +113,19 @@ class DatabaseAuth implements Auth
         string $secret
     ): ResponseInterface
     {
-        return $this->cookie->login($response, $username, $password, $secret);
+        return $this->cookie->onLogin($response, $username, $password, $secret);
     }
 
-    public function rememberMeLogout(ResponseInterface $response): ResponseInterface
+    public function rememberMeLogout(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        return $this->cookie->logout($response);
+        return $this->cookie->onLogout($request, $response);
     }
 
     public function autoLogin(ServerRequestInterface $request, string $secret): ?AuthUser
     {
-        if ($user = $this->getUser()) {
-            return $user;
-        }
         $user = $this->cookie->autoLogin($request, $secret);
         if ($user) {
-            $this->session->set('auth.user', $user->getId());
+            $this->setUser($user);
             return $user;
         }
         return null;

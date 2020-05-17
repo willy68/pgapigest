@@ -13,16 +13,35 @@ use Psr\Http\Message\ServerRequestInterface;
 class RememberMeAuthCookie implements RememberMeInterface
 {
 
-    const COOKIE_NAME = 'auth_login';
-
+    /**
+     *
+     * @var UserProvider
+     */
     private $userProvider;
 
-    public function __construct(UserProvider $userProvider )
+    /**
+     * Cookie options
+     *
+     * @var array
+     */
+    private $options = [
+        'name' => 'auth_login',
+        'expires' => 3600 * 24 * 3,
+        'path' => '/',
+        'domain' => null,
+        'secure' => false,
+        'httpOnly' => false
+    ];
+
+    public function __construct(UserProvider $userProvider, array $options = [] )
     {
         $this->userProvider = $userProvider;
+        if (!empty($options)) {
+            array_merge($this->options, $options);
+        }
     }
 
-    public function login(
+    public function onLogin(
         ResponseInterface $response,
         string $username,
         string $password,
@@ -34,9 +53,9 @@ class RememberMeAuthCookie implements RememberMeInterface
             $password,
             $secret);
 
-        $cookie = SetCookie::create(SELF::COOKIE_NAME)
+        $cookie = SetCookie::create($this->options['name'])
             ->withValue($value)
-            ->withExpires(time() + 3600 * 24 * 3)
+            ->withExpires(time() + $this->options['expires'])
             ->withPath('/')
             ->withDomain(null)
             ->withSecure(false)
@@ -47,7 +66,7 @@ class RememberMeAuthCookie implements RememberMeInterface
 
     public function autoLogin(ServerRequestInterface $request, string $secret): ?User
     {
-        $cookie = FigRequestCookies::get($request, self::COOKIE_NAME);
+        $cookie = FigRequestCookies::get($request, $this->options['name']);
         if ($cookie->getValue()) {
             list($username, $password) = AuthSecurityToken::decodeSecurityToken($cookie->getValue());
             $user = $this->userProvider->getUser('username', $username);
@@ -64,25 +83,29 @@ class RememberMeAuthCookie implements RememberMeInterface
         return null;
     }
 
-    public function logout(ResponseInterface $response): ResponseInterface
+    public function onLogout(ServerRequestInterface $request,  ResponseInterface $response): ResponseInterface
     {
-        $cookie = SetCookie::create(SELF::COOKIE_NAME)
+        $cookie = FigRequestCookies::get($request, $this->options['name']);
+        if ($cookie->getValue()) {
+            $cookie = SetCookie::create($this->options['name'])
             ->withValue('')
             ->withExpires(time() - 3600)
             ->withPath('/')
             ->withDomain(null)
             ->withSecure(false)
             ->withHttpOnly(false);
-        return FigResponseCookies::set($response, $cookie);
+            $response = FigResponseCookies::set($response, $cookie);
+        }
+        return $response;
     }
 
     public function resume(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $cookie = FigRequestCookies::get($request, self::COOKIE_NAME);
-        if ($cookie) {
-            $setCookie = SetCookie::create(self::COOKIE_NAME)
+        $cookie = FigRequestCookies::get($request, $this->options['name']);
+        if ($cookie->getValue()) {
+            $setCookie = SetCookie::create($this->options['name'])
                 ->withValue($cookie->getValue())
-                ->withExpires(time() + 3600 * 24 * 3)
+                ->withExpires(time() + $this->options['expires'])
                 ->withPath('/')
                 ->withDomain(null)
                 ->withSecure(false)

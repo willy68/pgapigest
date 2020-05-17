@@ -9,6 +9,7 @@ use App\Auth\Actions\LogoutAction;
 use Psr\Container\ContainerInterface;
 use App\Auth\Actions\LoginAttemptAction;
 use Framework\Renderer\RendererInterface;
+use App\Auth\Middleware\CookieLogoutMiddleware;
 
 class AuthModule extends Module
 {
@@ -24,6 +25,7 @@ class AuthModule extends Module
         $router = $container->get(Router::class);
         $router->get($container->get('auth.login'), LoginAction::class, 'auth.login');
         $router->post($container->get('auth.login'), LoginAttemptAction::class);
-        $router->post('/logout', LogoutAction::class, 'auth.logout');
+        $router->post('/logout', LogoutAction::class, 'auth.logout')
+            ->middleware(CookieLogoutMiddleware::class);
     }
 }
