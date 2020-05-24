@@ -2,8 +2,9 @@
 
 namespace App\Auth\Actions;
 
-use App\Auth\DatabaseAuth;
 use Framework\Actions\RouterAwareAction;
+use Framework\Auth\RememberMe\AuthCookieSession;
+use Framework\Auth\RememberMe\RememberMeInterface;
 use Framework\Renderer\RendererInterface;
 use Framework\Response\ResponseRedirect;
 use Framework\Router;
@@ -25,7 +26,7 @@ class LoginAttemptAction
     /**
      * Undocumented variable
      *
-     * @var DatabaseAuth
+     * @var AuthCookieSession
      */
     private $auth;
 
@@ -45,7 +46,7 @@ class LoginAttemptAction
 
     public function __construct(
         RendererInterface $renderer,
-        DatabaseAuth $auth,
+        AuthCookieSession $auth,
         SessionInterface $session,
         Router $router
     ) {
@@ -64,7 +65,7 @@ class LoginAttemptAction
             $this->session->delete('auth.redirect');
             $response = new ResponseRedirect($path);
             if ($params['rememberMe']) {
-                $response = $this->auth->rememberMe($response, $user->getUsername(), $user->getPassword(), 'secret');
+                $response = $this->auth->onLogin($response, $user->getUsername(), $user->getPassword(), 'secret');
             }
             return $response;
         } else {

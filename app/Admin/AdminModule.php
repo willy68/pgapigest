@@ -5,7 +5,7 @@ namespace App\Admin;
 use Framework\Module;
 use Framework\Router;
 use App\Admin\DashboardAction;
-use App\Auth\Middleware\CookieLoginMiddleware;
+use Framework\Auth\Middleware\CookieLoginMiddleware;
 use Grafikart\Csrf\CsrfMiddleware;
 use App\Blog\Actions\PostCrudAction;
 use Framework\Renderer\TwigRenderer;

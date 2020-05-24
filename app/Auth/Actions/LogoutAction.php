@@ -2,8 +2,7 @@
 
 namespace App\Auth\Actions;
 
-use App\Auth\DatabaseAuth;
-use Framework\Auth\Service\RememberMeAuthCookie;
+use Framework\Auth\RememberMe\AuthCookieSession;
 use Framework\Session\FlashService;
 use Framework\Response\ResponseRedirect;
 use Framework\Renderer\RendererInterface;
@@ -22,7 +21,7 @@ class LogoutAction
     /**
      * Undocumented variable
      *
-     * @var DatabaseAuth
+     * @var AuthCookieSession
      */
     private $auth;
 
@@ -35,7 +34,7 @@ class LogoutAction
 
     public function __construct(
         RendererInterface $renderer,
-        DatabaseAuth $auth,
+        AuthCookieSession $auth,
         FlashService $flashService
     )
     {

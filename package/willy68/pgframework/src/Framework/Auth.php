@@ -16,7 +16,7 @@ interface Auth
     /**
      *
      * @param User $user
-     * @return void
+     * @return Auth
      */
     public function setUser(User $user): self;
 }
