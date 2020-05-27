@@ -2,7 +2,7 @@
 
 namespace App\Auth\Actions;
 
-use Framework\Auth\RememberMe\AuthCookieSession;
+use Framework\Auth\Service\AuthSessionCookie;
 use Framework\Session\FlashService;
 use Framework\Response\ResponseRedirect;
 use Framework\Renderer\RendererInterface;
@@ -34,7 +34,7 @@ class LogoutAction
 
     public function __construct(
         RendererInterface $renderer,
-        AuthCookieSession $auth,
+        AuthSessionCookie $auth,
         FlashService $flashService
     )
     {

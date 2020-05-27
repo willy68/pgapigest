@@ -6,18 +6,11 @@ use Framework\Auth\User;
 use Dflydev\FigCookies\SetCookie;
 use Psr\Http\Message\ResponseInterface;
 use Dflydev\FigCookies\FigRequestCookies;
-use Framework\Auth\Provider\UserProvider;
 use Dflydev\FigCookies\FigResponseCookies;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RememberMeAuthCookie implements RememberMeInterface
+class AuthSessionCookie extends AuthSession implements RememberMeInterface
 {
-
-    /**
-     *
-     * @var UserProvider
-     */
-    private $userProvider;
 
     /**
      * Cookie options
@@ -25,8 +18,9 @@ class RememberMeAuthCookie implements RememberMeInterface
      * @var array
      */
     private $options = [
-        'name' => 'auth_login',
+        'sessionName' => 'auth.user',
         'field' => 'username',
+        'name' => 'auth_login',
         'expires' => 3600 * 24 * 3,
         'path' => '/',
         'domain' => null,
@@ -34,14 +28,14 @@ class RememberMeAuthCookie implements RememberMeInterface
         'httpOnly' => false
     ];
 
-    public function __construct(UserProvider $userProvider, array $options = [] )
-    {
-        $this->userProvider = $userProvider;
-        if (!empty($options)) {
-            array_merge($this->options, $options);
-        }
-    }
-
+    /**
+     *
+     * @param ResponseInterface $response
+     * @param string $username
+     * @param string $password
+     * @param string $secret
+     * @return ResponseInterface
+     */
     public function onLogin(
         ResponseInterface $response,
         string $username,
@@ -65,6 +59,12 @@ class RememberMeAuthCookie implements RememberMeInterface
 
     }
 
+    /**
+     *
+     * @param ServerRequestInterface $request
+     * @param string $secret
+     * @return User|null
+     */
     public function autoLogin(ServerRequestInterface $request, string $secret): ?User
     {
         $cookie = FigRequestCookies::get($request, $this->options['name']);
@@ -72,18 +72,25 @@ class RememberMeAuthCookie implements RememberMeInterface
             list($username, $password) = AuthSecurityToken::decodeSecurityToken($cookie->getValue());
             $user = $this->userProvider->getUser($this->options['field'], $username);
             if ($user && AuthSecurityToken::validateSecurityToken(
-                $cookie->getValue(),
-                $username,
-                $user->getPassword(),
-                $secret
-                )
+                        $cookie->getValue(),
+                        $username,
+                        $user->getPassword(),
+                        $secret
+                    )
                 ) {
-                return $user;
+                    $this->setUser($user);
+                    return $user;
             }
         }
         return null;
     }
 
+    /**
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function onLogout(ServerRequestInterface $request,  ResponseInterface $response): ResponseInterface
     {
         $cookie = FigRequestCookies::get($request, $this->options['name']);
@@ -100,6 +107,12 @@ class RememberMeAuthCookie implements RememberMeInterface
         return $response;
     }
 
+    /**
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function resume(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $cookie = FigRequestCookies::get($request, $this->options['name']);
@@ -114,13 +127,5 @@ class RememberMeAuthCookie implements RememberMeInterface
                 $response = FigResponseCookies::set($response, $setCookie);
         }
         return $response;
-    }
-
-    /**
-     * Get the value of cookie
-     */ 
-    public function getCookie()
-    {
-        return $this->cookie;
     }
 }

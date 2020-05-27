@@ -8,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 interface RememberMeInterface
 {
-    const NAME = 'auth.login';
 
     /**
      * Crée un cookie d'authentification

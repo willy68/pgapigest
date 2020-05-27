@@ -3,8 +3,7 @@
 namespace App\Auth\Actions;
 
 use Framework\Actions\RouterAwareAction;
-use Framework\Auth\RememberMe\AuthCookieSession;
-use Framework\Auth\RememberMe\RememberMeInterface;
+use Framework\Auth\Service\AuthSessionCookie;
 use Framework\Renderer\RendererInterface;
 use Framework\Response\ResponseRedirect;
 use Framework\Router;
@@ -46,7 +45,7 @@ class LoginAttemptAction
 
     public function __construct(
         RendererInterface $renderer,
-        AuthCookieSession $auth,
+        AuthSessionCookie $auth,
         SessionInterface $session,
         Router $router
     ) {

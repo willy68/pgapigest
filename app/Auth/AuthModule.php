@@ -9,7 +9,7 @@ use App\Auth\Actions\LogoutAction;
 use Psr\Container\ContainerInterface;
 use App\Auth\Actions\LoginAttemptAction;
 use Framework\Renderer\RendererInterface;
-use App\Auth\Middleware\CookieLogoutMiddleware;
+use Framework\Auth\Middleware\CookieLogoutMiddleware;
 
 class AuthModule extends Module
 {

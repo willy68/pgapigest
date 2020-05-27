@@ -2,8 +2,8 @@
 
 namespace App\Auth\Middleware;
 
-use App\Auth\DatabaseAuth;
 use Framework\Auth\ForbiddenException;
+use Framework\Auth\Service\AuthSessionCookie;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,11 +13,11 @@ class CookieLoginMiddleware implements MiddlewareInterface
 {
     /**
      *
-     * @var DatabaseAuth
+     * @var AuthSessionCookie
      */
     private $auth;
 
-    public function __construct(DatabaseAuth $auth)
+    public function __construct(AuthSessionCookie $auth)
     {
         $this->auth = $auth;
     }

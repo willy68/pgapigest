@@ -2,8 +2,7 @@
 
 use Framework\{
     Auth,
-    Auth\User,
-    Auth\RememberMe\RememberMeInterface
+    Auth\User
 };
 use App\Auth\{
     ActiveRecordUserProvider,
@@ -11,7 +10,7 @@ use App\Auth\{
     Middleware\ForbidenMiddleware
 };
 use Framework\Auth\Provider\UserProvider;
-use Framework\Auth\RememberMe\AuthCookieSession;
+use Framework\Auth\Service\AuthSessionCookie;
 
 use function DI\{
     add,
@@ -24,11 +23,10 @@ return [
     'twig.extensions' => add([
         get(AuthTwigExtension::class)
     ]),
-    Auth::class => \DI\get(AuthCookieSession::class),
+    Auth::class => \DI\get(AuthSessionCookie::class),
     User::class => factory(function (Auth $auth) {
         return $auth->getUser();
     })->parameter('auth', get(Auth::class)),
     UserProvider::class => \DI\get(ActiveRecordUserProvider::class),
-    RememberMeInterface::class => \DI\get(AuthCookieSession::class),
     ForbidenMiddleware::class => \DI\autowire()->constructorParameter('loginPath', \DI\get('auth.login'))
 ];

@@ -2,7 +2,7 @@
 
 namespace Framework\Auth\Middleware;
 
-use Framework\Auth\RememberMe\RememberMeInterface;
+use Framework\Auth\Service\AuthSessionCookie;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,11 +12,11 @@ class CookieLogoutMiddleware implements MiddlewareInterface
 {
     /**
      *
-     * @var RememberMeInterface
+     * @var AuthSessionCookie
      */
     private $auth;
 
-    public function __construct(RememberMeInterface $auth)
+    public function __construct(AuthSessionCookie $auth)
     {
         $this->auth = $auth;
     }
