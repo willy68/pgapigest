@@ -2,11 +2,12 @@
 
 namespace App\Auth\Middleware;
 
-use Framework\Auth\ForbiddenException;
-use Framework\Response\ResponseRedirect;
+use Framework\Auth\User;
 use Framework\Session\FlashService;
+use Framework\Auth\ForbiddenException;
 use Framework\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
+use Framework\Response\ResponseRedirect;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -36,7 +37,7 @@ class ForbidenMiddleware implements MiddlewareInterface
         } catch (ForbiddenException $e) {
             return $this->redirectLogin($request);
         } catch (\TypeError $error) {
-            if (strpos($error->getMessage(), \Framework\Auth\User::class) !== false) {
+            if (strpos($error->getMessage(), User::class) !== false) {
                 return $this->redirectLogin($request);
             }
         }

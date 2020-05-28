@@ -2,14 +2,12 @@
 
 namespace Framework\Auth\RememberMe;
 
-use Framework\Auth;
 use Framework\Auth\User;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-interface RememberMeInterface extends Auth
+interface RememberMeInterface
 {
-    const NAME = 'auth_login';
 
     /**
      * Crée un cookie d'authentification

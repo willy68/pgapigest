@@ -2,13 +2,14 @@
 
 namespace App\Auth\Actions;
 
-use Framework\Actions\RouterAwareAction;
-use Framework\Auth\Service\AuthSessionCookie;
-use Framework\Renderer\RendererInterface;
-use Framework\Response\ResponseRedirect;
 use Framework\Router;
+use Framework\Auth\AuthSession;
 use Framework\Session\FlashService;
 use Framework\Session\SessionInterface;
+use Framework\Actions\RouterAwareAction;
+use Framework\Auth\RememberMe\RememberMeInterface;
+use Framework\Response\ResponseRedirect;
+use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class LoginAttemptAction
@@ -25,9 +26,16 @@ class LoginAttemptAction
     /**
      * Undocumented variable
      *
-     * @var AuthCookieSession
+     * @var AuthSession
      */
     private $auth;
+
+    /**
+     * 
+     *
+     * @var RememberMeInterface
+     */
+    private $cookie;
 
     /**
      * Undocumented variable
@@ -45,12 +53,14 @@ class LoginAttemptAction
 
     public function __construct(
         RendererInterface $renderer,
-        AuthSessionCookie $auth,
+        AuthSession $auth,
+        RememberMeInterface $cookie,
         SessionInterface $session,
         Router $router
     ) {
         $this->renderer = $renderer;
         $this->auth = $auth;
+        $this->cookie = $cookie;
         $this->session = $session;
         $this->router = $router;
     }
@@ -64,7 +74,7 @@ class LoginAttemptAction
             $this->session->delete('auth.redirect');
             $response = new ResponseRedirect($path);
             if ($params['rememberMe']) {
-                $response = $this->auth->onLogin($response, $user->getUsername(), $user->getPassword(), 'secret');
+                $response = $this->cookie->onLogin($response, $user->getUsername(), $user->getPassword(), 'secret');
             }
             return $response;
         } else {

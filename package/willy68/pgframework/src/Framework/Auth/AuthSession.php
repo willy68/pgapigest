@@ -1,6 +1,6 @@
 <?php
 
-namespace Framework\Auth\Service;
+namespace Framework\Auth;
 
 use Framework\Auth;
 use Framework\Auth\User;
@@ -25,6 +25,13 @@ class AuthSession implements Auth
      * @var SessionInterface
      */
     private $session;
+
+    /**
+     * 
+     *
+     * @var User
+     */
+    private $user;
 
     /**
      * 

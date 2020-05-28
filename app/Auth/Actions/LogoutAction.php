@@ -2,11 +2,12 @@
 
 namespace App\Auth\Actions;
 
-use Framework\Auth\Service\AuthSessionCookie;
+use Framework\Auth\AuthSession;
 use Framework\Session\FlashService;
 use Framework\Response\ResponseRedirect;
 use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Framework\Auth\Service\AuthSessionCookie;
 
 class LogoutAction
 {
@@ -21,7 +22,7 @@ class LogoutAction
     /**
      * Undocumented variable
      *
-     * @var AuthCookieSession
+     * @var AuthSession
      */
     private $auth;
 
@@ -34,7 +35,7 @@ class LogoutAction
 
     public function __construct(
         RendererInterface $renderer,
-        AuthSessionCookie $auth,
+        AuthSession $auth,
         FlashService $flashService
     )
     {

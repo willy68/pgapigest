@@ -2,8 +2,9 @@
 
 namespace Framework\Auth\Middleware;
 
+use Framework\Auth;
 use Framework\Auth\ForbiddenException;
-use Framework\Auth\Service\AuthSessionCookie;
+use Framework\Auth\RememberMe\RememberMeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,13 +14,21 @@ class CookieLoginMiddleware implements MiddlewareInterface
 {
     /**
      *
-     * @var AuthSessionCookie
+     * @var Auth
      */
     private $auth;
 
-    public function __construct(AuthSessionCookie $auth)
+    /**
+     * 
+     *
+     * @var RememberMeInterface
+     */
+    private $cookie;
+
+    public function __construct(Auth $auth, RememberMeInterface $cookie)
     {
         $this->auth = $auth;
+        $this->cookie = $cookie;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -28,12 +37,13 @@ class CookieLoginMiddleware implements MiddlewareInterface
         if ($user) {
             return $handler->handle($request);
         }
-        $user = $this->auth->autoLogin($request, 'secret');
+        $user = $this->cookie->autoLogin($request, 'secret');
         if (!$user) {
             throw new ForbiddenException("Cookie invalid");
         }
+        $this->auth->setUser($user);
         $response = $handler->handle($request);
-        return $this->auth->resume($request, $response);
+        return $this->cookie->resume($request, $response);
     }
 
 }
